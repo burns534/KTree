@@ -8,28 +8,42 @@
 
 import UIKit
 
-
 class AnimationTree: KTree {
     var nodes = [ViewNode]()
     var position: CGPoint
-    var contentView: UIView
     let verticalStep: CGFloat = 30.0
     let horizontalStep: CGFloat = 30.0
+    var contentFrame: CGRect = .zero
     
-    init(position: CGPoint, contentView view: UIView) {
+    weak var delegate: ViewNodeDelegate?
+    
+    static var treeEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    
+    init(position: CGPoint) {
         self.position = position
-        contentView = view
+        print(Node.sigmoid.dx(1000.0))
     }
     
     func insert(tag: Int) {
-        print("inserting: \(tag)")
-        count += 1
-        let newNode = ViewNode(withTag: tag, contentView: contentView)
-        newNode.configureView()
-        nodes.append(newNode)
+        print("\ninserting: \(tag)")
+        let newNode = ViewNode(withTag: tag)
+        newNode.delegate = delegate
         print("nodes.count: \(nodes.count)")
-        insert(node: newNode, parent: root, depth: 0)
-        correctTree()
+        if insert(node: newNode, parent: root, depth: 0) {
+            newNode.configureView()
+            nodes.append(newNode)
+            correctTree()
+            count += 1
+            if newNode.isEqualTo(object: root) {
+                newNode.rootConfigure()
+                return
+            }
+            newNode.correct { offset in
+                guard let offset = offset else { return }
+                self.adjustTree(offset: offset)
+            }
+        }
+        
     }
     
     func delete(node: ViewNode) {
@@ -39,9 +53,15 @@ class AnimationTree: KTree {
         correctTree()
     }
     
+    func adjustTree(offset: CGSize) {
+        print("adjustTree called")
+        position += CGPoint(x: offset.width, y: offset.height)
+        adjustment(root: root, offset: offset)
+    }
+    
     private func correctTree() {
         _ = resizeWidths(start: root)
-        guard let root = root as? ViewNode else { return }
+//        guard let root = root as? ViewNode else { return }
 //        if root.leftWidth < position.x {
 //            position.x = root.leftWidth
 //        } else if root.rightWidth > position.x {
@@ -51,45 +71,97 @@ class AnimationTree: KTree {
     }
     
     private func resizeWidths(start node: Node?) -> CGFloat{
-        guard let node = node else { return 0 }
-        guard let viewNode = node as? ViewNode else { fatalError() }
-        viewNode.leftWidth = max(0.5 * horizontalStep, resizeWidths(start: node.left))
-        viewNode.rightWidth = max(0.5 * horizontalStep, resizeWidths(start: node.right))
-        return viewNode.leftWidth + viewNode.rightWidth
+        guard let node = node as? ViewNode else { return 0 }
+        node.leftWidth = max(0.5 * horizontalStep, resizeWidths(start: node.left))
+        node.rightWidth = max(0.5 * horizontalStep, resizeWidths(start: node.right))
+        return node.leftWidth + node.rightWidth
     }
     
     private func adjustSubtree(start node: Node?, x: CGFloat, y: CGFloat, subTree: Node.SubTree?) {
-        guard let node = node, let viewNode = node as? ViewNode else { return }
+        guard let node = node as? ViewNode else { return }
         var xPos = x
         if let side = subTree {
             if side == .left {
-                xPos -= viewNode.rightWidth
+                xPos -= node.rightWidth
             } else if side == .right {
-                xPos += viewNode.leftWidth
+                xPos += node.leftWidth
             }
         }
         let location = CGPoint(x: xPos, y: y)
-        viewNode.location = location
-//        if !contentView.point(inside: location, with: nil) {
-//            let sv = contentView.superview as! UIScrollView
-//            sv.setZoomScale(sv.zoomScale * 0.95, animated: true)
-//        }
-//        if location.x < contentView.bounds.minX {
-//            let offset = contentView.bounds.minX - location.x
-//            contentView.frame = CGRect(x: location.x, y: 0, width: contentView.frame.width + offset, height: contentView.frame.height)
-//        }
-//        if location.y < contentView.bounds.minY {
-//            let offset = contentView.bounds.minY - location.y
-//            contentView.frame = CGRect(x: location.x, y: 0, width: contentView.frame.width + offset, height: contentView.frame.height)
-//        }
-        viewNode.refresh()
+        if location != node.location {
+            node.location = location
+            node.correct { offset in
+                guard let offset = offset else { return }
+                self.adjustTree(offset: offset)
+            }
+        }
+//        print("node \(node.tag) located at \(node.location!.x), \(node.location!.y)")
+        node.refresh()
         adjustSubtree(start: node.left, x: xPos, y: y + verticalStep, subTree: .left)
         adjustSubtree(start: node.right, x: xPos, y: y + verticalStep, subTree: .right)
+    }
+    
+//    private func contentAdjustment(root: Node?, found: inout Bool) {
+//        if found { return }
+//        guard let node = root as? ViewNode,
+//        let location = node.location,
+//        let delegate = delegate else { return }
+////        complete = delegate.adjustContentFrame(violatingPoint: location)
+//
+//
+//        contentAdjustment(root: node.left, found: &found)
+//        contentAdjustment(root: node.right, found: &found)
+//    }
+    
+    private func adjustment(root: Node?, offset: CGSize) {
+        guard let node = root as? ViewNode else { return }
+        if node.location != nil {
+            node.location! += CGPoint(x: offset.width, y: offset.height)
+        }
+        node.refresh()
+        adjustment(root: node.right, offset: offset)
+        adjustment(root: node.left, offset: offset)
     }
 
 // MARK: Needs to be completed
     func animateDelete(node: ViewNode) {
         delete(node: node)
         nodes.removeAll { $0 == node }
+    }
+}
+
+extension AnimationTree {
+    func query(tag: Int) {
+        _ = query(tag: tag, start: root)
+    }
+    private func query(tag: Int, start node: Node?) -> Bool {
+        guard let node = node else { return false }
+        guard let viewNode = node as? ViewNode else { fatalError() }
+        if tag == viewNode.tag {
+            queryCorrect(node: node)
+            return true
+        } else if tag < viewNode.tag {
+//            print("Searching left subtree")
+            return query(tag: tag, start: node.left)
+        } else {
+//            print("Searching right subtree")
+            return query(tag: tag, start: node.right)
+        }
+    }
+
+    private func queryCorrect(node: Node) {
+        Node.totalStamps += 1
+        node.stamps += 1
+        node.feed(stamp: Node.totalStamps)
+        if let parent = node.parent {
+            if parent.weight < node.weight {
+                if node == parent.left {
+                    rotateRight(node: node)
+                } else {
+                    rotateLeft(node: node)
+                }
+                correctTree()
+            }
+        }
     }
 }

@@ -77,6 +77,10 @@ extension CGSize {
         return CGSize(width: left.width + right.width, height: left.height + right.height)
     }
     
+    static func +=(left: inout CGSize, right: CGSize) {
+        left = CGSize(width: left.width + right.width, height: left.height + right.height)
+    }
+    
     static func /(left: CGSize, right: Int) -> CGSize {
         let r = CGFloat(right)
         return CGSize(width: left.width / r, height: left.height / r)
@@ -85,6 +89,14 @@ extension CGSize {
     static func -(left: CGSize, right: Int) -> CGSize {
         let r = CGFloat(right)
         return CGSize(width: left.width - r, height: left.height - r)
+    }
+    
+    static func -=(left: inout CGSize, right: CGSize) {
+        left = CGSize(width: left.width - right.width, height: left.height - right.height)
+    }
+    
+    static prefix func -(size: CGSize) -> CGSize {
+        return CGSize(width: -size.width, height: -size.height)
     }
 }
 
@@ -97,6 +109,12 @@ extension CGPoint {
     }
     static func +=(left: inout CGPoint, right: CGPoint) {
         left = CGPoint(x: left.x + right.x, y: left.y + right.y)
+    }
+    static func -(left: CGPoint, right: CGPoint) -> CGPoint {
+        return CGPoint(x: left.x - right.x, y: left.y - right.y)
+    }
+    static func -(left: CGPoint, right: CGFloat) -> CGPoint {
+        return CGPoint(x: left.x - right, y: left.y - right)
     }
 }
 

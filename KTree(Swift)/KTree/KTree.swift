@@ -12,8 +12,7 @@ open class KTree {
     static let COUNT = 10
     
     var root: Node?
-    var count: Int = 0
-    var stamps: UInt = 0
+    var count: Int64 = 0
     
     var rotateLeftHandler: (Node) -> () = {_ in}
     var rotateRightHandler: (Node) -> () = {_ in}
@@ -54,33 +53,36 @@ open class KTree {
         node.parent = grandparent
     }
     
-    func insert(node: Node?, parent: Node?, depth: UInt) {
-        guard let node = node else { return }
+    func insert(node: Node?, parent: Node?, depth: UInt) -> Bool{
+        guard let node = node else { return false }
         if root == nil {
             root = node
             node.depth = 0
-            return
+            node.tree = self
+            return true
         }
-        guard let parent = parent else { return }
+        guard let parent = parent else { return false }
         if node.isLessThan(object: parent) {
             if parent.left == nil {
                 parent.left = node
                 node.parent = parent
                 node.depth = depth
-                return
+                node.tree = self
+                return true
             }
-            insert(node: node, parent: parent.left, depth: depth + 1)
+            return insert(node: node, parent: parent.left, depth: depth + 1)
         } else if node.isEqualTo(object: parent) {
             print("KTree: insert: Duplicate entries not allowed")
-            return
+            return false
         } else {
             if parent.right == nil {
                 parent.right = node
                 node.parent = parent
                 node.depth = depth
-                return
+                node.tree = self
+                return true
             }
-            insert(node: node, parent: parent.right, depth: depth + 1)
+            return insert(node: node, parent: parent.right, depth: depth + 1)
         }
     }
     

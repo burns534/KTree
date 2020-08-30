@@ -8,10 +8,16 @@
 
 import UIKit
 
+protocol ViewNodeDelegate: AnyObject {
+    func getSuperview() -> UIView
+    func getViewController() -> UIViewController
+    func getScrollView() -> UIScrollView
+}
 
 class ViewNode: Node {
     
     static var nodeRadius: CGFloat = 12.5
+    private let contentFrame = CGRect(x: 0, y: 0, width: 2 * ViewNode.nodeRadius, height: 2 * ViewNode.nodeRadius)
     
     var tag: Int
     var view: UIView!
@@ -19,14 +25,14 @@ class ViewNode: Node {
     var links = [CAShapeLayer]()
     var circle: CAShapeLayer?
     var label: UILabel?
-    var contentView: UIView
+    var detailButton: UIButton!
     var leftWidth: CGFloat = 0
     var rightWidth: CGFloat = 0
     
+    weak var delegate: ViewNodeDelegate?
     
-    init(withTag tag: Int, contentView view: UIView) {
+    init(withTag tag: Int) {
         self.tag = tag
-        contentView = view
     }
     
     override func isLessThan(object: Comparable?) -> (Bool) {
@@ -46,7 +52,7 @@ class ViewNode: Node {
     
     func configureView() {
         let radius = ViewNode.nodeRadius
-        view = UIView(frame: CGRect(x: 0, y: 0, width: 2 * radius, height: 2 * radius))
+        view = UIView(frame: contentFrame)
         view.backgroundColor = .olive
         view.layer.cornerRadius = radius
         let path = UIBezierPath(arcCenter: .zero + radius, radius: radius, startAngle: 0, endAngle: 2 * CGFloat(2 * Float.pi), clockwise: true).cgPath
@@ -57,17 +63,28 @@ class ViewNode: Node {
         circle?.lineWidth = 1
         view.layer.addSublayer(circle!)
         
-        label = UILabel(frame: CGRect(x: 0, y: 0, width: 2 * radius, height: 2 * radius))
+        label = UILabel(frame: contentFrame)
         label?.textAlignment = .center
         label?.text = String(tag)
         label?.textColor = .white
         label?.adjustsFontSizeToFitWidth = true
         view.addSubview(label!)
-        contentView.addSubview(view)
+        
+        detailButton = UIButton(frame: contentFrame)
+        detailButton.addTarget(self, action: #selector(detailHandler), for: .touchUpInside)
+        view.addSubview(detailButton)
+        delegate?.getSuperview().addSubview(view)
+    }
+    
+    @objc func detailHandler(_ sender: UIButton) {
+        let vc = ViewNodeDetailViewController()
+        vc.configure(node: self)
+        delegate?.getViewController().present(vc, animated: true)
     }
     
     func refresh() {
-        view.frame.origin = location!
+        guard let loc = location else { return }
+        view.frame.origin = loc - ViewNode.nodeRadius
         removeLinks()
         guard let parent = parent as? ViewNode else { return }
         link(to: parent)
@@ -77,15 +94,15 @@ class ViewNode: Node {
         guard let here = location else { return }
         guard let there = node.location else { return }
         let path = UIBezierPath()
-        path.move(to: here + ViewNode.nodeRadius)
-        path.addLine(to: there + ViewNode.nodeRadius)
+        path.move(to: here)
+        path.addLine(to: there)
         
         let shape = CAShapeLayer()
         shape.path = path.cgPath
         shape.strokeColor = color.cgColor
         shape.lineWidth = 2
         links.append(shape)
-        contentView.layer.insertSublayer(shape, at: 0)
+        delegate?.getSuperview().layer.insertSublayer(shape, at: 0)
     }
     
     func removeLinks() {
@@ -126,5 +143,69 @@ class ViewNode: Node {
         circle?.removeFromSuperlayer()
         removeLinks()
         view.removeFromSuperview()
+    }
+    
+    func rootConfigure() {
+        guard let container = delegate?.getSuperview(),
+            let scrollView = delegate?.getScrollView() else { fatalError() }
+        let frame = CGRect(x: 0, y: 0, width: 2 * ViewNode.nodeRadius, height: 2 * ViewNode.nodeRadius)
+        container.frame = frame
+        scrollView.contentSize = frame.size
+    }
+    
+    func correct(correction: @escaping (CGSize?) -> ()) {
+        print("Correct called")
+        guard let loc = location,
+        let container = delegate?.getSuperview(),
+        let scrollView = delegate?.getScrollView() else { fatalError() }
+        let insets = AnimationTree.treeEdgeInsets
+        print("location: \(loc.x), \(loc.y)")
+        if loc.x < insets.left + ViewNode.nodeRadius {
+            let offset = insets.left + ViewNode.nodeRadius - loc.x
+            print("offset: \(offset)")
+//            let scale = container.bounds.width / (xOffset + container.bounds.width)
+//            print("Scale: \(scale)")
+//            container.transform = container.transform.scaledBy(x: scale, y: scale)
+            print("contentSize before: \(scrollView.contentSize.width)")
+            print("containerView bounds before: \(container.bounds.width)")
+            print("containerView frame before: \(container.frame.width)")
+            let frame = CGRect(x: 0, y: 0, width: container.frame.width + offset, height: container.frame.height)
+            container.frame = frame
+//            scrollView.contentSize = frame.size
+            scrollView.contentSize = CGSize(width: 3 * frame.size.width, height: 3 * frame.size.height)
+            print("contentSize after: \(scrollView.contentSize.width)")
+            print("containerView bounds after: \(container.bounds.width)")
+            print("containerView frame after: \(container.frame.width)")
+            correction(CGSize(width: offset, height: 0))
+        } else if loc.x > container.frame.width - ViewNode.nodeRadius - insets.right {
+            let offset = loc.x - container.frame.width + insets.left + ViewNode.nodeRadius
+            print("offset: \(offset)")
+//            let scale = container.bounds.width / (loc.x + insets.right + ViewNode.nodeRadius)
+//            print("Scale: \(scale)")
+            print("contentSize before: \(scrollView.contentSize.width)")
+            print("containerView bounds before: \(container.bounds.width)")
+            print("containerView frame before: \(container.frame.width)")
+//            scrollView.zoomScale *= scale
+            let frame = CGRect(x: 0, y: 0, width: container.frame.width + offset, height: container.frame.height)
+            container.frame = frame
+//            scrollView.contentSize = frame.size
+            scrollView.contentSize = CGSize(width: 3 * frame.size.width, height: 3 * frame.size.height)
+            let activeFrame = CGRect(x: container.frame.width - container.bounds.width, y: 0, width: container.frame.width, height: container.frame.height)
+            scrollView.scrollRectToVisible(activeFrame, animated: true)
+            print("contentSize after: \(scrollView.contentSize.width)")
+            print("containerView bounds after: \(container.bounds.width)")
+            print("containerView frame after: \(container.frame.width)")
+        }
+        if loc.y > container.frame.height - ViewNode.nodeRadius - insets.bottom {
+            let offset = loc.y - container.frame.height + ViewNode.nodeRadius + insets.bottom
+            print("offset: \(offset)")
+            print("container before: \(container.frame.width), \(container.frame.height)")
+            let frame = CGRect(x: 0, y: 0, width: container.frame.width, height: container.frame.height + offset)
+            container.frame = frame
+            scrollView.contentSize = CGSize(width: 3 * frame.size.width, height: 3 * frame.size.height)
+            print("container after: \(container.frame.width), \(container.frame.height)")
+            let activeFrame = CGRect(x: 0, y: container.frame.height - container.bounds.height, width: container.frame.width, height: container.frame.height)
+            scrollView.scrollRectToVisible(activeFrame, animated: true)
+        }
     }
 }
