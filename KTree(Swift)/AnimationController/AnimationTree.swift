@@ -13,7 +13,6 @@ class AnimationTree: KTree {
     var position: CGPoint
     let verticalStep: CGFloat = 30.0
     let horizontalStep: CGFloat = 30.0
-    var contentFrame: CGRect = .zero
     
     weak var delegate: ViewNodeDelegate?
     
@@ -21,6 +20,7 @@ class AnimationTree: KTree {
     
     init(position: CGPoint) {
         self.position = position
+// MARK: Need to change the way the sigmoid works. The derivative isn't the answer to the issue. I would need to take the integral of the derivative which is just the orginal function of weight. Need to handle it on the decay side rather than sigmoid side.
         print(Node.sigmoid.dx(1000.0))
     }
     
@@ -32,18 +32,13 @@ class AnimationTree: KTree {
         if insert(node: newNode, parent: root, depth: 0) {
             newNode.configureView()
             nodes.append(newNode)
-            correctTree()
             count += 1
-            if newNode.isEqualTo(object: root) {
-                newNode.rootConfigure()
-                return
-            }
+            correctTree()
             newNode.correct { offset in
                 guard let offset = offset else { return }
                 self.adjustTree(offset: offset)
             }
         }
-        
     }
     
     func delete(node: ViewNode) {

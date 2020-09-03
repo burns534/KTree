@@ -118,6 +118,12 @@ extension CGPoint {
     }
 }
 
+extension CGRect {
+    static func / (left: CGRect, right: CGFloat) -> CGRect {
+        return CGRect(x: left.minX / right, y: left.minY / right, width: left.width / right, height: left.height / right)
+    }
+}
+
 // Not mine
 extension UIColor {
   public convenience init(rgba: String) {

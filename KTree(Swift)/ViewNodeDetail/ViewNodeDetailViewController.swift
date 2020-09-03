@@ -54,7 +54,11 @@ class ViewNodeDetailViewController: UIViewController {
         view.addSubview(subTreeLabel)
         subRootLabel.text = "subRoot: \((node.subRoot as? ViewNode) == nil ? "" : String((node.subRoot as! ViewNode).tag))"
         view.addSubview(subRootLabel)
-        locationLabel.text = "location: (\(node.location?.x ?? 0), \(node.location?.y ?? 0))"
+        if let loc = node.location {
+            locationLabel.text = String(format: "location: (%.2f, %.2f)", loc.x, loc.y)
+        } else {
+            locationLabel.text = "No location data."
+        }
         view.addSubview(locationLabel)
         leftWidthLabel.text = "leftWidth: \(node.leftWidth)"
         view.addSubview(leftWidthLabel)
@@ -63,7 +67,7 @@ class ViewNodeDetailViewController: UIViewController {
         
         var y = 10
         view.subviews.forEach { subview in
-            subview.frame = CGRect(x: 20, y: y, width: 200, height: 30)
+            subview.frame = CGRect(x: 20, y: y, width: 350, height: 30)
             y += 40
         }
     }

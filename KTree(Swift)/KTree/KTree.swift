@@ -53,7 +53,7 @@ open class KTree {
         node.parent = grandparent
     }
     
-    func insert(node: Node?, parent: Node?, depth: UInt) -> Bool{
+    func insert(node: Node?, parent: Node?, depth: UInt) -> Bool {
         guard let node = node else { return false }
         if root == nil {
             root = node
