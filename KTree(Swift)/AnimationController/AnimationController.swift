@@ -20,11 +20,20 @@ class AnimationController: UIViewController {
     var paretoQuery: UIButton!
     var undo: UIButton!
     var slider: UISlider!
+    var sliderMinLabel: UILabel!
+    var sliderMaxLabel: UILabel!
+    var sliderValueLabel: UILabel!
+    var infoButton: UIButton!
     
     var controlContainer: UIView!
     
-    private let controlHeight: CGFloat = 400
-    private let safeAreaInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
+    private let controlHeight: CGFloat = 330
+    private let containerHeight: CGFloat = 700
+    private let safeAreaInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+    private let maxNodeValue: Int = 9999
+    private var containerFrame: CGRect {
+        CGRect(x: 0, y: 0, width: view.bounds.width, height: containerHeight)
+    }
     
     private var isKeyboardVisible: Bool = false
     
@@ -45,34 +54,51 @@ class AnimationController: UIViewController {
         view.addGestureRecognizer(tapRecognizer)
         view.isUserInteractionEnabled = true
         
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 500))
+        scrollView = UIScrollView(frame: containerFrame)
         scrollView.contentSize = .zero
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.bouncesZoom = true
         scrollView.delegate = self
-        scrollView.minimumZoomScale = 0.05
-        scrollView.maximumZoomScale = 1.5
+        scrollView.minimumZoomScale = 0.2
+        scrollView.maximumZoomScale = 2
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.contentInsetAdjustmentBehavior = .never
         view.addSubview(scrollView)
         
-        containerView = UIView(frame: .zero)
+        containerView = UIView(frame: containerFrame)
         scrollView.addSubview(containerView)
-//        view.addSubview(containerView)
         
-        tree = AnimationTree(position: CGPoint(x: view.bounds.midX, y: 50 ))
+        tree = AnimationTree(position: CGPoint(x: view.bounds.midX, y: 50))
         tree.delegate = self
         
-        controlContainer = UIView(frame: CGRect(x: 0, y: view.bounds.height - safeAreaInsets.bottom - controlHeight, width: view.bounds.width, height: controlHeight))
+        controlContainer = UIView(frame: CGRect(x: 0, y: view.bounds.height - controlHeight, width: view.bounds.width, height: controlHeight))
         controlContainer.backgroundColor = .white
+        controlContainer.setShadow(radius: 10)
+        controlContainer.layer.cornerRadius = 10
         view.addSubview(controlContainer)
+        
+        infoButton = UIButton()
+        let config = UIImage.SymbolConfiguration(pointSize: 25, weight: .thin)
+        let image = UIImage(systemName: "info.circle", withConfiguration: config)?.withRenderingMode(.alwaysTemplate)
+        infoButton.setImage(image, for: .normal)
+        infoButton.imageView?.tintColor = .olive
+        infoButton.addTarget(self, action: #selector(infoHandler), for: .touchUpInside)
+        controlContainer.addSubview(infoButton)
         
         slider = UISlider()
         slider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
         slider.minimumTrackTintColor = .olive
         slider.minimumValue = 0.0
-        slider.maximumValue = 200
+        slider.maximumValue = Float(maxNodeValue)
+        slider.value = 1000.0
+//        slider.thumbTintColor = .olive
         controlContainer.addSubview(slider)
+        
+        sliderValueLabel = UILabel()
+        sliderValueLabel.font = UIFont.systemFont(ofSize: 20, weight: .light)
+        sliderValueLabel.text = String(Int(slider.value))
+        controlContainer.addSubview(sliderValueLabel)
         
         field = PaddedTextField()
         field.setPadding(.standard)
@@ -81,7 +107,6 @@ class AnimationController: UIViewController {
         field.delegate = self
         field.textAlignment = .center
         field.layer.cornerRadius = 5
-//        view.addSubview(field)
         controlContainer.addSubview(field)
         
         iterationsField = PaddedTextField()
@@ -91,7 +116,6 @@ class AnimationController: UIViewController {
         iterationsField.delegate = self
         iterationsField.textAlignment = .center
         iterationsField.layer.cornerRadius = 5
-//        view.addSubview(iterationsField)
         controlContainer.addSubview(iterationsField)
         
         undo = UIButton()
@@ -102,7 +126,6 @@ class AnimationController: UIViewController {
         undo.setShadow(radius: 5, color: .darkGray, opacity: 0.4, offset: CGSize(width: 0, height: 5))
         undo.layer.cornerRadius = 5
         undo.backgroundColor = .olive
-//        view.addSubview(undo)
         controlContainer.addSubview(undo)
         
         insertButton = UIButton()
@@ -113,7 +136,6 @@ class AnimationController: UIViewController {
         insertButton.layer.cornerRadius = 5
         insertButton.setShadow(radius: 5, color: .darkGray, opacity: 0.4, offset: CGSize(width: 0, height: 5))
         insertButton.backgroundColor = .olive
-//        view.addSubview(insertButton)
         controlContainer.addSubview(insertButton)
         
         searchButton = UIButton()
@@ -124,7 +146,6 @@ class AnimationController: UIViewController {
         searchButton.layer.cornerRadius = 5
         searchButton.setShadow(radius: 5, color: .darkGray, opacity: 0.4, offset: CGSize(width: 0, height: 5))
         searchButton.backgroundColor = .olive
-//        view.addSubview(searchButton)
         controlContainer.addSubview(searchButton)
         
         paretoQuery = UIButton()
@@ -135,10 +156,8 @@ class AnimationController: UIViewController {
         paretoQuery.layer.cornerRadius = 5
         paretoQuery.setShadow(radius: 5, color: .darkGray, opacity: 0.4, offset: CGSize(width: 0, height: 5))
         paretoQuery.backgroundColor = .olive
-//        view.addSubview(paretoQuery)
         controlContainer.addSubview(paretoQuery)
         
-//        view.subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         controlContainer.subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
         NSLayoutConstraint.activate([
@@ -148,7 +167,7 @@ class AnimationController: UIViewController {
             scrollView.heightAnchor.constraint(equalToConstant: 600),
             
             undo.leadingAnchor.constraint(equalTo: controlContainer.leadingAnchor, constant: 20),
-            undo.bottomAnchor.constraint(equalTo: controlContainer.bottomAnchor, constant: -20),
+            undo.bottomAnchor.constraint(equalTo: controlContainer.bottomAnchor, constant: -safeAreaInsets.bottom),
             undo.widthAnchor.constraint(equalToConstant: 180),
             undo.heightAnchor.constraint(equalToConstant: 60),
             
@@ -178,6 +197,12 @@ class AnimationController: UIViewController {
             slider.bottomAnchor.constraint(equalTo: field.topAnchor, constant: -20),
             slider.leadingAnchor.constraint(equalTo: controlContainer.leadingAnchor, constant: 30),
             slider.widthAnchor.constraint(equalTo: controlContainer.widthAnchor, constant: -60),
+            
+            sliderValueLabel.bottomAnchor.constraint(equalTo: slider.topAnchor, constant: -10),
+            sliderValueLabel.centerXAnchor.constraint(equalTo: slider.centerXAnchor),
+            
+            infoButton.leadingAnchor.constraint(equalTo: controlContainer.leadingAnchor, constant: 15),
+            infoButton.topAnchor.constraint(equalTo: controlContainer.topAnchor, constant: 15)
         ])
         
 //        nums.shuffled().forEach {
@@ -195,14 +220,13 @@ class AnimationController: UIViewController {
     
     @objc func insertHandler(_ sender: UIButton) {
         guard let text = field.text else { return }
-//        if isKeyboardVisible { return }
         if let tag = Int(text) {
             tree.insert(tag: tag)
         } else if text.hasPrefix("$") {
             let index = text.firstIndex { $0 != "$" }!
             let substring = text[index...]
             guard let iterations = Int(substring) else { return }
-            for _ in 0..<iterations { tree.insert(tag: Int.random(in: 0..<200)) }
+            for _ in 0..<iterations { tree.insert(tag: Int.random(in: 0..<Int(slider.value))) }
         }
         resignFirstResponder()
         field.endEditing(true)
@@ -212,7 +236,6 @@ class AnimationController: UIViewController {
 // MARK: Not fully functional
     @objc func undoHandler(_ sender: UIButton) {
         guard let delNode = tree.nodes.last else { return }
-//        if isKeyboardVisible { return }
         print(delNode.tag)
         tree.delete(node: delNode)
     }
@@ -220,7 +243,6 @@ class AnimationController: UIViewController {
     @objc func searchHandler(_ sender: UIButton) {
         guard let text = field.text,
             let num = Int(text) else { return }
-//        if isKeyboardVisible { return }
         if let stringIterations = iterationsField.text,
             let iterations = Int(stringIterations) {
             for _ in 0..<iterations { tree.query(tag: num) }
@@ -232,7 +254,6 @@ class AnimationController: UIViewController {
     @objc func randomQueryHandler(_ sender: UIButton) {
         guard let text = iterationsField.text,
             let num = Int(text) else { return }
-//        if isKeyboardVisible { return }
         var count = 0
         while count < num {
             let index = Int.random(in: 0..<tree.nodes.count)
@@ -252,24 +273,24 @@ class AnimationController: UIViewController {
     }
     
     @objc func keyboardWillAppear(_ notification: Notification) {
-//        isKeyboardVisible = true
-        print("called")
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let height = keyboardFrame.cgRectValue.height
-            if controlContainer.frame.origin.y == view.bounds.height - safeAreaInsets.bottom - controlContainer.frame.height {
+            if controlContainer.frame.origin.y == view.bounds.height - controlContainer.frame.height {
                 controlContainer.frame.origin.y -= height
             }
         }
     }
     
     @objc func keyboardWillDisappear(_ notification: Notification) {
-//        isKeyboardVisible = false
-        print("here: \(controlContainer.frame.height)")
-        controlContainer.frame.origin.y = view.bounds.height - safeAreaInsets.bottom - controlContainer.frame.height
+        controlContainer.frame.origin.y = view.bounds.height - controlContainer.frame.height
     }
     
     @objc func sliderChanged(_ sender: UISlider) {
-        print("called with value\(sender.value)")
+        sliderValueLabel.text = String(Int(sender.value))
+    }
+    
+    @objc func infoHandler(_ sender: UIButton) {
+        //
     }
 }
 
@@ -279,7 +300,27 @@ extension AnimationController: UIScrollViewDelegate {
     }
 
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+//        if scrollView.zoomScale < 1.0 {
+//            let center = CGPoint(x: containerFrame.midX, y: containerFrame.midY)
+//            UIView.animate(withDuration: 0.5) {
+//                self.containerView.center = center
+//                scrollView.contentOffset = .zero
+//            }
+//        }
         return
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        guard let pinchRecognizer = scrollView.pinchGestureRecognizer else { return }
+        if scrollView.zoomScale < 1.0 && pinchRecognizer.velocity <= 0.0 {
+            let center = CGPoint(x: containerFrame.midX, y: containerFrame.midY)
+            self.containerView.center = center
+            scrollView.contentOffset = .zero
+        }
+    }
+    
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+        print("\nChanged\n")
     }
 }
 

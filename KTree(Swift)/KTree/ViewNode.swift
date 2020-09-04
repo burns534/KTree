@@ -17,7 +17,7 @@ protocol ViewNodeDelegate: AnyObject {
 
 class ViewNode: Node {
     
-    static var nodeRadius: CGFloat = 12.5
+    static var nodeRadius: CGFloat = 20
     private let nodeFrame = CGRect(x: 0, y: 0, width: 2 * ViewNode.nodeRadius, height: 2 * ViewNode.nodeRadius)
     
     var tag: Int

@@ -11,12 +11,15 @@ import UIKit
 class AnimationTree: KTree {
     var nodes = [ViewNode]()
     var position: CGPoint
-    let verticalStep: CGFloat = 30.0
-    let horizontalStep: CGFloat = 30.0
+    let verticalStep: CGFloat = 15.0
+    let horizontalStep: CGFloat = 15.0
     
     weak var delegate: ViewNodeDelegate?
     
     static var treeEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    var step: CGSize {
+        CGSize(width: verticalStep + 2 * ViewNode.nodeRadius, height: horizontalStep + 2 * ViewNode.nodeRadius)
+    }
     
     init(position: CGPoint) {
         self.position = position
@@ -67,8 +70,8 @@ class AnimationTree: KTree {
     
     private func resizeWidths(start node: Node?) -> CGFloat{
         guard let node = node as? ViewNode else { return 0 }
-        node.leftWidth = max(0.5 * horizontalStep, resizeWidths(start: node.left))
-        node.rightWidth = max(0.5 * horizontalStep, resizeWidths(start: node.right))
+        node.leftWidth = max(0.5 * step.width, resizeWidths(start: node.left))
+        node.rightWidth = max(0.5 * step.width, resizeWidths(start: node.right))
         return node.leftWidth + node.rightWidth
     }
     
@@ -92,8 +95,8 @@ class AnimationTree: KTree {
         }
 //        print("node \(node.tag) located at \(node.location!.x), \(node.location!.y)")
         node.refresh()
-        adjustSubtree(start: node.left, x: xPos, y: y + verticalStep, subTree: .left)
-        adjustSubtree(start: node.right, x: xPos, y: y + verticalStep, subTree: .right)
+        adjustSubtree(start: node.left, x: xPos, y: y + step.height, subTree: .left)
+        adjustSubtree(start: node.right, x: xPos, y: y + step.height, subTree: .right)
     }
     
 //    private func contentAdjustment(root: Node?, found: inout Bool) {
