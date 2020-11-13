@@ -11,6 +11,7 @@
 		278E832324F0387F00C14B42 /* Sigmoid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E832224F0387F00C14B42 /* Sigmoid.swift */; };
 		278E832624F03BAB00C14B42 /* ViewNodeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E832524F03BAB00C14B42 /* ViewNodeDetailViewController.swift */; };
 		278E832A24F4387300C14B42 /* Pareto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E832924F4387300C14B42 /* Pareto.swift */; };
+		27A340E8255DB79200FEBEF8 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A340E7255DB79200FEBEF8 /* ControlView.swift */; };
 		27B4946624E6F6FC006B7219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946524E6F6FC006B7219 /* AppDelegate.swift */; };
 		27B4946824E6F6FC006B7219 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946724E6F6FC006B7219 /* SceneDelegate.swift */; };
 		27B4946B24E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946924E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld */; };
@@ -18,13 +19,12 @@
 		27B4947224E6F6FE006B7219 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27B4947124E6F6FE006B7219 /* Preview Assets.xcassets */; };
 		27B4947524E6F6FE006B7219 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B4947324E6F6FE006B7219 /* LaunchScreen.storyboard */; };
 		27B4948124E6F7EA006B7219 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4948024E6F7EA006B7219 /* AnimationController.swift */; };
-		27B4948424E6F983006B7219 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4948324E6F983006B7219 /* Node.swift */; };
-		27B4948624E6FD38006B7219 /* ViewNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4948524E6FD38006B7219 /* ViewNode.swift */; };
 		27B4948824E70395006B7219 /* KTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4948724E70395006B7219 /* KTree.swift */; };
 		27B4949A24E73161006B7219 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4949724E73161006B7219 /* Extensions.swift */; };
 		27B4949B24E73161006B7219 /* PaddedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4949824E73161006B7219 /* PaddedTextField.swift */; };
 		27B4949C24E73161006B7219 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4949924E73161006B7219 /* Colors.swift */; };
-		27B4949E24E7396F006B7219 /* Stepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4949D24E7396F006B7219 /* Stepper.swift */; };
+		27BB7535255EE7A300AE36EF /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB7534255EE7A300AE36EF /* Scene.swift */; };
+		27BB753B255EF97100AE36EF /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753A255EF97100AE36EF /* TreeNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +32,7 @@
 		278E832224F0387F00C14B42 /* Sigmoid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sigmoid.swift; sourceTree = "<group>"; };
 		278E832524F03BAB00C14B42 /* ViewNodeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNodeDetailViewController.swift; sourceTree = "<group>"; };
 		278E832924F4387300C14B42 /* Pareto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pareto.swift; sourceTree = "<group>"; };
+		27A340E7255DB79200FEBEF8 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		27B4946224E6F6FC006B7219 /* KTree(Swift).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KTree(Swift).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27B4946524E6F6FC006B7219 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27B4946724E6F6FC006B7219 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,13 +42,12 @@
 		27B4947424E6F6FE006B7219 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27B4947624E6F6FE006B7219 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27B4948024E6F7EA006B7219 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
-		27B4948324E6F983006B7219 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
-		27B4948524E6FD38006B7219 /* ViewNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNode.swift; sourceTree = "<group>"; };
 		27B4948724E70395006B7219 /* KTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KTree.swift; sourceTree = "<group>"; };
 		27B4949724E73161006B7219 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27B4949824E73161006B7219 /* PaddedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddedTextField.swift; sourceTree = "<group>"; };
 		27B4949924E73161006B7219 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		27B4949D24E7396F006B7219 /* Stepper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stepper.swift; sourceTree = "<group>"; };
+		27BB7534255EE7A300AE36EF /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
+		27BB753A255EF97100AE36EF /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +116,9 @@
 			children = (
 				27B4948024E6F7EA006B7219 /* AnimationController.swift */,
 				278E832024EB242300C14B42 /* AnimationTree.swift */,
+				27A340E7255DB79200FEBEF8 /* ControlView.swift */,
+				27BB7534255EE7A300AE36EF /* Scene.swift */,
+				27BB753A255EF97100AE36EF /* TreeNode.swift */,
 			);
 			path = AnimationController;
 			sourceTree = "<group>";
@@ -123,9 +126,6 @@
 		27B4948224E6F974006B7219 /* KTree */ = {
 			isa = PBXGroup;
 			children = (
-				27B4949D24E7396F006B7219 /* Stepper.swift */,
-				27B4948324E6F983006B7219 /* Node.swift */,
-				27B4948524E6FD38006B7219 /* ViewNode.swift */,
 				27B4948724E70395006B7219 /* KTree.swift */,
 			);
 			path = KTree;
@@ -222,13 +222,13 @@
 				27B4949A24E73161006B7219 /* Extensions.swift in Sources */,
 				278E832324F0387F00C14B42 /* Sigmoid.swift in Sources */,
 				27B4948824E70395006B7219 /* KTree.swift in Sources */,
+				27BB753B255EF97100AE36EF /* TreeNode.swift in Sources */,
+				27A340E8255DB79200FEBEF8 /* ControlView.swift in Sources */,
 				278E832124EB242300C14B42 /* AnimationTree.swift in Sources */,
+				27BB7535255EE7A300AE36EF /* Scene.swift in Sources */,
 				27B4946824E6F6FC006B7219 /* SceneDelegate.swift in Sources */,
-				27B4949E24E7396F006B7219 /* Stepper.swift in Sources */,
-				27B4948424E6F983006B7219 /* Node.swift in Sources */,
 				27B4946B24E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld in Sources */,
 				27B4948124E6F7EA006B7219 /* AnimationController.swift in Sources */,
-				27B4948624E6FD38006B7219 /* ViewNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

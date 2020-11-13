@@ -8,6 +8,16 @@
 
 import UIKit
 
+protocol Node: class {
+    var parentNode: Node? { get set }
+    var left: Node? { get set }
+    var right: Node? { get set }
+    func isEqualTo(_ node: Node?) -> Bool
+    func isLessThan(_ node: Node?) -> Bool
+    func isGreaterThan(_ node: Node?) -> Bool
+    func swap(withNode node: Node?)
+}
+
 open class KTree {
     static let COUNT = 10
     
@@ -18,86 +28,86 @@ open class KTree {
     var rotateRightHandler: (Node) -> () = {_ in}
     
     func rotateLeft(node: Node) {
-        if node.parent == nil || node == node.parent?.left { return }
+        guard let parent = node.parentNode, node.isEqualTo(node.parentNode?.left)
+        else { return }
         rotateLeftHandler(node)
-        let grandparent = node.parent?.parent
-        node.parent?.right = node.left
-        node.left = node.parent
-        if grandparent == nil {
+        let grandparentNode = node.parentNode?.parentNode
+        node.parentNode?.right = node.left
+        node.left = node.parentNode
+        if grandparentNode == nil {
             root = node
-        } else if node.parent == grandparent?.left {
-            grandparent?.left = node
+        } else if parent.isEqualTo(grandparentNode?.left) {
+            grandparentNode?.left = node
         } else {
-            grandparent?.right = node
+            grandparentNode?.right = node
         }
-        node.parent?.right?.parent = node.left
-        node.parent?.parent = node
-        node.parent = grandparent
+        node.parentNode?.right?.parentNode = node.left
+        node.parentNode?.parentNode = node
+        node.parentNode = grandparentNode
     }
     
     func rotateRight(node: Node) {
-        if node.parent == nil || node == node.parent?.right { return }
+        guard let parent = node.parentNode,
+              node.isEqualTo(node.parentNode?.right)
+        else { return }
         rotateRightHandler(node)
-        let grandparent = node.parent?.parent
-        node.parent?.left = node.right
-        node.right = node.parent
-        if (grandparent == nil) {
+        let grandparentNode = node.parentNode?.parentNode
+        node.parentNode?.left = node.right
+        node.right = node.parentNode
+        if (grandparentNode == nil) {
             root = node
-        } else if (node.parent == grandparent?.left) {
-            grandparent?.left = node
+        } else if parent.isEqualTo(grandparentNode?.left) {
+            grandparentNode?.left = node
         } else {
-            grandparent?.right = node;
+            grandparentNode?.right = node;
         }
-        node.parent?.left?.parent = node.right
-        node.parent?.parent = node
-        node.parent = grandparent
+        node.parentNode?.left?.parentNode = node.right
+        node.parentNode?.parentNode = node
+        node.parentNode = grandparentNode
     }
     
-    func insert(node: Node?, parent: Node?, depth: UInt) -> Bool {
+    func insert(node: Node?, parentNode: Node?, depth: UInt) -> Bool {
         guard let node = node else { return false }
         if root == nil {
             root = node
-            node.depth = 0
-            node.tree = self
+//            node.depth = 0
             return true
         }
-        guard let parent = parent else { return false }
-        if node.isLessThan(object: parent) {
-            if parent.left == nil {
-                parent.left = node
-                node.parent = parent
-                node.depth = depth
-                node.tree = self
+        guard let parentNode = parentNode else { return false }
+        if node.isLessThan(parentNode) {
+            if parentNode.left == nil {
+                parentNode.left = node
+                node.parentNode = parentNode
+//                node.depth = depth
                 return true
             }
-            return insert(node: node, parent: parent.left, depth: depth + 1)
-        } else if node.isEqualTo(object: parent) {
+            return insert(node: node, parentNode: parentNode.left, depth: depth + 1)
+        } else if node.isEqualTo(parentNode) {
             print("KTree: insert: Duplicate entries not allowed")
             return false
         } else {
-            if parent.right == nil {
-                parent.right = node
-                node.parent = parent
-                node.depth = depth
-                node.tree = self
+            if parentNode.right == nil {
+                parentNode.right = node
+                node.parentNode = parentNode
+//                node.depth = depth
                 return true
             }
-            return insert(node: node, parent: parent.right, depth: depth + 1)
+            return insert(node: node, parentNode: parentNode.right, depth: depth + 1)
         }
     }
     
     func delete(node: Node) {
         if root == nil || count == 0{ return }
-        if node == root {
+        if node.isEqualTo(root) {
             count = 0
             root = nil
         }
-        // this means they're both nil
-        if node.right == node.left {
-            if node == node.parent?.left {
-                node.parent?.left = nil
+        
+        if node.right == nil && node.left == nil {
+            if node.isEqualTo(node.parentNode?.left) {
+                node.parentNode?.left = nil
             } else {
-                node.parent?.right = nil
+                node.parentNode?.right = nil
             }
             count -= 1;
         } else if node.right != nil && node.left != nil {
@@ -109,21 +119,21 @@ open class KTree {
             delete(node: node)
         } else {
             count -= 1
-            if node == node.parent?.left {
+            if node.isEqualTo(node.parentNode?.left) {
                 if let left = node.left {
-                    node.parent?.left = left
-                    left.parent = node.parent
+                    node.parentNode?.left = left
+                    left.parentNode = node.parentNode
                 } else {
-                    node.parent?.left = node.right
-                    node.right?.parent = node.parent
+                    node.parentNode?.left = node.right
+                    node.right?.parentNode = node.parentNode
                 }
             } else {
                 if let left = node.left {
-                    node.parent?.right = left
-                    left.parent = node.parent
+                    node.parentNode?.right = left
+                    left.parentNode = node.parentNode
                 } else {
-                    node.parent?.right = node.right
-                    node.right?.parent = node.parent
+                    node.parentNode?.right = node.right
+                    node.right?.parentNode = node.parentNode
                 }
             }
         }
