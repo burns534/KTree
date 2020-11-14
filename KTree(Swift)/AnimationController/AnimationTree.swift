@@ -15,33 +15,44 @@ class AnimationTree: KTree {
     let horizontalStep: CGFloat = 15.0
     private var totalStamps: Int64 = 0
     
-    var isAnimating: Bool = false
-    
-    static var treeEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    private var isAnimating: Bool = false
+    var animationSpeed: TimeInterval = 0.3
+
     var step: CGSize {
         CGSize(width: verticalStep + 2 * TreeNode.nodeRadius, height: horizontalStep + 2 * TreeNode.nodeRadius)
     }
     
-    var treeNode: SKNode
+    var scene: Scene
     
-    init(treeNode: SKNode) {
-        self.treeNode = treeNode
+    init(scene: Scene) {
+        self.scene = scene
 // MARK: Need to change the way the sigmoid works. The derivative isn't the answer to the issue. I would need to take the integral of the derivative which is just the orginal function of weight. Need to handle it on the decay side rather than sigmoid side.
         print(TreeNode.sigmoid.dx(1000.0))
     }
     
+    private var queue: [() -> Void] = []
+        
     func insert(tag: Int) {
-        let newNode = TreeNode(tag: tag)
-        newNode.zPosition = 0.1
-        if insert(node: newNode, parentNode: root, depth: 0) {
-            treeNode.addChild(newNode)
-            nodes.append(newNode)
-            count += 1
-            correctTree()
-//            newNode.correct { offset in
-//                guard let offset = offset else { return }
-//                self.adjustTree(offset: offset)
-//            }
+        let work = { [self] in
+            print("work \(tag)")
+            let newNode = TreeNode(tag: tag)
+            newNode.zPosition = 0.1
+            if insert(node: newNode, parentNode: root, depth: 0) {
+                scene.treeContainer.addChild(newNode)
+                if let parent = newNode.parentNode as? TreeNode {
+                    newNode.link(to: parent)
+                }
+                nodes.append(newNode)
+                count += 1
+                correctTree()
+            } else {
+                next()
+            }
+        }
+        if isAnimating {
+            queue.append(work)
+        } else {
+            work()
         }
     }
     
@@ -51,56 +62,83 @@ class AnimationTree: KTree {
         super.delete(node: node)
         correctTree()
     }
+
+    private var offset: CGFloat = 0
+    private var dispatchGroup = DispatchGroup()
     
-    func adjustTree(offset: CGSize) {
-        isAnimating = true
-        treeNode.run(SKAction.move(by: CGVector(dx: -offset.width, dy: -offset.height), duration: 0.5)) {
-            self.adjustment(root: self.root, offset: offset)
-            self.isAnimating = false
+    func next() {
+        if queue.first != nil {
+            queue.removeFirst()()
         }
     }
     
     private func correctTree() {
-        _ = resizeWidths(start: root)
-        adjustSubtree(start: root, x: treeNode.position.x, y: treeNode.position.y, subTree: nil)
-    }
-    
-    private func resizeWidths(start node: Node?) -> CGFloat {
-        guard let node = node as? TreeNode else {
-            return 0
+        offset = 0
+        resizeWidths(start: root)
+        adjustSubtree(start: root, x: scene.treeContainer.position.x, y: scene.treeContainer.position.y, subTree: nil)
+        dispatchGroup.notify(queue: .main) { [self] in
+            scene.treeContainer.run(SKAction.move(by: CGVector(dx: offset, dy: 0), duration: animationSpeed)) {
+                isAnimating = false
+                next()
+            }
         }
+    }
+    @discardableResult
+    private func resizeWidths(start node: Node?) -> CGFloat {
+        guard let node = node as? TreeNode else { return 0 }
         node.leftWidth = max(0.5 * step.width, resizeWidths(start: node.left))
         node.rightWidth = max(0.5 * step.width, resizeWidths(start: node.right))
         return node.leftWidth + node.rightWidth
     }
-    
+
     private func adjustSubtree(start node: Node?, x: CGFloat, y: CGFloat, subTree: TreeNode.SubTree?) {
-        guard let node = node as? TreeNode else { return }
-        var xPos = x
+        guard let node = node as? TreeNode else {
+            return
+        }
+        isAnimating = true
+        var position = CGPoint(x: x, y: y)
         if let side = subTree {
             if side == .left {
-                xPos -= node.rightWidth
+                position.x -= node.rightWidth
             } else if side == .right {
-                xPos += node.leftWidth
+                position.x += node.leftWidth
             }
         }
-        isAnimating = true
-        node.run(SKAction.move(to: CGPoint(x: xPos, y: y), duration: 0.5)) { [self] in
-            node.refresh()
-            adjustSubtree(start: node.left, x: xPos, y: y - step.height, subTree: .left)
-            adjustSubtree(start: node.right, x: xPos, y: y - step.height, subTree: .right)
-            isAnimating = false
+        
+        let convertedPosition = scene.treeContainer.convert(position, to: scene)
+        if convertedPosition.x + offset < 0 {
+            print(offset, convertedPosition.x)
+            offset = 0 - convertedPosition.x
+//            print("less than, \(node.tag)")
+        } else if convertedPosition.x + offset > UIScreen.main.bounds.width {
+            offset = UIScreen.main.bounds.width - convertedPosition.x
+//            print("greater than \(node.tag)")
         }
-    }
+        
+        adjustSubtree(start: node.left, x: position.x, y: position.y - step.height, subTree: .left)
+        
+        dispatchGroup.enter()
 
-    private func adjustment(root: Node?, offset: CGSize) {
-        guard let node = root as? TreeNode else { return }
-        isAnimating = true
-        node.run(SKAction.move(by: CGVector(dx: -offset.width, dy: -offset.height), duration: 0.5)) { [self] in
+// MARK: Mostly works, could be smoother with rotations maybe
+        let startPos = node.position
+        node.run(SKAction.customAction(withDuration: animationSpeed) { [self] node, elapsed in
+            guard let node = node as? TreeNode else { return }
+            let step = elapsed / CGFloat(animationSpeed)
+            node.position = startPos + (position - startPos) * step
+            node.removeLinks()
+            if let parent = node.parentNode as? TreeNode {
+                node.link(to: parent)
+            }
+            if let leftChild = node.left as? TreeNode {
+                node.link(to: leftChild)
+            }
+            if let rightChild = node.right as? TreeNode {
+                node.link(to: rightChild)
+            }
+        }) { [self] in
+            dispatchGroup.leave()
             node.refresh()
-            adjustment(root: node.right, offset: offset)
-            adjustment(root: node.left, offset: offset)
-            isAnimating = false
+            adjustSubtree(start: node.right, x: position.x, y: position.y - step.height, subTree: .right)
         }
     }
 

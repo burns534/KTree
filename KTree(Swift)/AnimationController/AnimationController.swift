@@ -39,7 +39,7 @@ class AnimationController: UIViewController {
             view.isUserInteractionEnabled = true
             view.presentScene(scene)
             view.isMultipleTouchEnabled = true
-            tree = AnimationTree(treeNode: scene.treeContainer)
+            tree = AnimationTree(scene: scene)
             currentScene = scene
         }
 
@@ -54,9 +54,10 @@ class AnimationController: UIViewController {
         controlView.valueSlider.maximumValue = Float(maxNodeValue)
         controlView.valueSlider.value = ceil(maxNodeValue / 2)
         sliderChanged()
+        iterationSliderChange()
         controlView.valueField.delegate = self
-//        controlView.iterationsField.delegate = self
         controlView.iterationSlider.addTarget(self, action: #selector(iterationSliderChange), for: .valueChanged)
+        
         controlView.undoButton.addTarget(self, action: #selector(undoButtonHandler), for: .touchUpInside)
         controlView.insertButton.addTarget(self, action: #selector(insertHandler), for: .touchUpInside)
         controlView.searchButton.addTarget(self, action: #selector(searchHandler), for: .touchUpInside)
@@ -84,7 +85,6 @@ class AnimationController: UIViewController {
     }
 
     @objc func insertHandler(_ sender: UIButton) {
-        guard !tree.isAnimating else { return }
         guard let text = controlView.valueField.text else { return }
         if let tag = Int(text) {
             tree.insert(tag: tag)
@@ -103,18 +103,15 @@ class AnimationController: UIViewController {
     
 // MARK: Not fully functional
     @objc func undoButtonHandler(_ sender: UIButton) {
-        guard !tree.isAnimating else { return }
         guard let delNode = tree.nodes.last else { return }
-        print(delNode.tag)
         tree.delete(node: delNode)
     }
     
     @objc func iterationSliderChange() {
-        
+        controlView.iterationSliderLabel.text = "\(Int(controlView.iterationSlider.value)) Iterations"
     }
     
     @objc func searchHandler(_ sender: UIButton) {
-        guard !tree.isAnimating else { return }
         guard let text = controlView.valueField.text,
             let num = Int(text) else { return }
         let iterations = Int(controlView.iterationSlider.value)
@@ -126,7 +123,6 @@ class AnimationController: UIViewController {
     }
     
     @objc func paretoHandler(_ sender: UIButton) {
-        guard !tree.isAnimating else { return }
         let num = Int(controlView.iterationSlider.value)
         var count = 0
         while count < num {

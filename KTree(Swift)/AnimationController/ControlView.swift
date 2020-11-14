@@ -14,7 +14,7 @@ fileprivate let buttonHeightMultiplier: CGFloat = 0.4
 class ControlView: UIView {
     
     let valueField = PaddedTextField()
-//    let iterationsField = PaddedTextField()
+    let iterationSliderLabel = UILabel()
     let iterationSlider = UISlider()
     let insertButton = UIButton()
     let searchButton = UIButton()
@@ -48,7 +48,7 @@ class ControlView: UIView {
         valueSlider.minimumValue = 0.0
         valueSlider.translatesAutoresizingMaskIntoConstraints = false
         
-        sliderValueLabel.font = UIFont.systemFont(ofSize: 20, weight: .light)
+        sliderValueLabel.font = UIFont.systemFont(ofSize: 20, weight: .thin)
         sliderValueLabel.text = String(Int(valueSlider.value))
         sliderValueLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -58,13 +58,10 @@ class ControlView: UIView {
         valueField.textAlignment = .center
         valueField.layer.cornerRadius = 5
         valueField.translatesAutoresizingMaskIntoConstraints = false
+
+        iterationSliderLabel.font = UIFont.systemFont(ofSize: 20, weight: .thin)
+        iterationSliderLabel.translatesAutoresizingMaskIntoConstraints = false
         
-//        iterationsField.setPadding(.standard)
-//        iterationsField.backgroundColor = .darkWhite
-//        iterationsField.placeholder = "Iterations"
-//        iterationsField.textAlignment = .center
-//        iterationsField.layer.cornerRadius = 5
-//        iterationsField.translatesAutoresizingMaskIntoConstraints = false
         iterationSlider.minimumTrackTintColor = .blue
         iterationSlider.minimumValue = 0
         iterationSlider.maximumValue = 2000
@@ -107,7 +104,7 @@ class ControlView: UIView {
         addSubview(valueSlider)
         addSubview(sliderValueLabel)
         addSubview(valueField)
-//        addSubview(iterationsField)
+        addSubview(iterationSliderLabel)
         addSubview(iterationSlider)
         addSubview(undoButton)
         addSubview(insertButton)
@@ -141,12 +138,11 @@ class ControlView: UIView {
             undoButton.leadingAnchor.constraint(equalTo: valueField.leadingAnchor),
             undoButton.widthAnchor.constraint(equalTo: valueField.widthAnchor),
             undoButton.heightAnchor.constraint(equalTo: valueField.heightAnchor),
+            
+            iterationSliderLabel.topAnchor.constraint(equalTo: valueField.topAnchor),
+            iterationSliderLabel.centerXAnchor.constraint(equalTo: iterationSlider.centerXAnchor),
 
-//            iterationsField.topAnchor.constraint(equalTo: valueField.topAnchor),
-//            iterationsField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-//            iterationsField.widthAnchor.constraint(equalTo: valueField.widthAnchor),
-//            iterationsField.heightAnchor.constraint(equalTo: valueField.heightAnchor),
-            iterationSlider.topAnchor.constraint(equalTo: valueField.topAnchor),
+            iterationSlider.topAnchor.constraint(equalTo: iterationSliderLabel.bottomAnchor),
             iterationSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             iterationSlider.widthAnchor.constraint(equalTo: valueField.widthAnchor),
             

@@ -101,6 +101,9 @@ extension CGSize {
 }
 
 extension CGPoint {
+    static func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+        CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+    }
     static func +(left: CGPoint, right: CGFloat) -> CGPoint {
         return CGPoint(x: left.x + right, y: left.y + right)
     }
@@ -122,11 +125,20 @@ extension CGPoint {
     static func -=(lhs: inout CGPoint, rhs: CGPoint) {
         lhs = CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
     }
+    static func *(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+        CGPoint(x: lhs.x * rhs, y: lhs.y * rhs)
+    }
 }
 
 extension CGRect {
     static func / (left: CGRect, right: CGFloat) -> CGRect {
         return CGRect(x: left.minX / right, y: left.minY / right, width: left.width / right, height: left.height / right)
+    }
+}
+
+extension CGVector {
+    static prefix func -(lhs: CGVector) -> CGVector {
+        CGVector(dx: -lhs.dx, dy: -lhs.dy)
     }
 }
 

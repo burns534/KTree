@@ -45,11 +45,11 @@ class TreeNode: SKNode, Node {
     static var thresholdFactor: Double = 2.0
     static let sigmoid = Sigmoid(max: TreeNode.maxWeight, mid: TreeNode.midPoint, k: TreeNode.feedFactor)
     var tag: Int
-    var links = [SKShapeNode]()
+    var links: [SKShapeNode?] = []
     var leftWidth: CGFloat = 0
     var rightWidth: CGFloat = 0
-    let heavyColor = UIColor.blue
-    let lightColor = UIColor.red
+    let heavyColor = UIColor.red
+    let lightColor = UIColor.blue
     
     var subTree: SubTree? {
         guard let parentNode = parentNode else { return .root }
@@ -102,11 +102,6 @@ class TreeNode: SKNode, Node {
     
     func refresh() {
         label.text = "\(tag)"
-        links.forEach { $0.removeFromParent() }
-        links = []
-        if let parent = parentNode as? TreeNode {
-            link(to: parent)
-        }
         let ratio = min(CGFloat(10000 * (abs(weight - 1.0)) / TreeNode.maxWeight), 1.0)
         if weight > 1.0 {
             circle.fillColor = UIColor.blend(color1: .white, intensity1: 1 - ratio, color2: heavyColor, intensity2: ratio)
@@ -116,6 +111,7 @@ class TreeNode: SKNode, Node {
     }
     
     func deconfigure() {
+        removeFromParent()
         removeLinks()
     }
     
@@ -126,12 +122,13 @@ class TreeNode: SKNode, Node {
         let line = SKShapeNode(path: path)
         line.strokeColor = .black
         links.append(line)
+        node.links.append(line)
         parent?.addChild(line)
     }
     
     func removeLinks() {
         links.forEach {
-            $0.removeFromParent()
+            $0?.removeFromParent()
         }
         links = []
     }
@@ -177,14 +174,6 @@ class TreeNode: SKNode, Node {
         weight += growth - decay
         if weight < 0.0 { weight = 0.0 }
         self.stamp = stamp
-        
-//        if let parent = parentNode as? TreeNode, weight > parent.weight {
-//            let parentTag = parent.tag
-//            parent.tag = tag
-//            parent.refresh()
-//            tag = parentTag
-//            refresh()
-//        }
-//        print("difference: \(difference)")
+
     }
 }

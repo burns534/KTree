@@ -23,6 +23,7 @@ class ViewNodeDetailViewController: UIViewController {
     var locationLabel = UILabel()
     var leftWidthLabel = UILabel()
     var rightWidthLabel = UILabel()
+    var stackView: UIStackView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,39 +31,48 @@ class ViewNodeDetailViewController: UIViewController {
     }
     
     func configure(node: TreeNode) {
-        tagLabel.text = "node: \(node.tag)"
-        view.addSubview(tagLabel)
+        tagLabel.text = "tag: \(node.tag)"
         weightLabel.text = "weight: \(node.weight)"
-        view.addSubview(weightLabel)
         stampLabel.text = "stamp: \(node.stamp)"
-        view.addSubview(stampLabel)
-//        totalStampsLabel.text = "total stamps: \(Node.totalStamps)"
-        view.addSubview(totalStampsLabel)
         stampsLabel.text = "node stamps: \(node.stamps)"
-        view.addSubview(stampsLabel)
         parentLabel.text = "parent: \((node.parentNode as? TreeNode) == nil ? "" : String((node.parentNode as! TreeNode).tag))"
-        view.addSubview(parentLabel)
         leftLabel.text = "left: \((node.left as? TreeNode) == nil ? "" : String((node.left as! TreeNode).tag))"
-        view.addSubview(leftLabel)
         rightLabel.text = "right: \((node.right as? TreeNode) == nil ? "" : String((node.right as! TreeNode).tag))"
-        view.addSubview(rightLabel)
 
         subTreeLabel.text = "subTree: \((node.subTree == .left && node.subTree != nil) ? "left" : "right")"
-        view.addSubview(subTreeLabel)
         subRootLabel.text = "subRoot: \((node.subRoot as? TreeNode) == nil ? "" : String((node.subRoot as! TreeNode).tag))"
-        view.addSubview(subRootLabel)
         locationLabel.text = String(format: "location: (%.2f, %.2f)", node.position.x, node.position.y)
-        view.addSubview(locationLabel)
         leftWidthLabel.text = "leftWidth: \(node.leftWidth)"
-        view.addSubview(leftWidthLabel)
         rightWidthLabel.text = "rightWidth: \(node.rightWidth)"
-        view.addSubview(rightWidthLabel)
         
-        var y = 10
-        view.subviews.forEach { subview in
-            subview.frame = CGRect(x: 20, y: y, width: 350, height: 30)
-            y += 40
-        }
+        stackView = UIStackView(arrangedSubviews: [
+            tagLabel,
+            weightLabel,
+            stampLabel,
+            stampsLabel,
+            parentLabel,
+            leftLabel,
+            rightLabel,
+            subTreeLabel,
+            subRootLabel,
+            locationLabel,
+            leftWidthLabel,
+            rightWidthLabel
+        ])
+        
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.alignment = .leading
+        stackView.spacing = 10
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50)
+        ])
     }
 
 }

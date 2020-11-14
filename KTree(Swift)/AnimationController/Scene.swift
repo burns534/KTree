@@ -37,7 +37,7 @@ class Scene: SKScene {
     private var previousScale: CGFloat = 1.0
     private var currentScale: CGFloat = 1.0
     private var touchCount: Int = 0
-    
+// FIXME: needs work
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touches.count == 1, touchCount == 1, let touch = touches.first {
             let loc = touch.location(in: self)
@@ -70,8 +70,7 @@ class Scene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 // MARK: Touch up inside
         if let touch = touches.first, previousTouchPosition == touch.location(in: self) {
-            print("true)")
-            if let node = treeContainer.nodes(at: touch.location(in: treeContainer)).first as? TreeNode {
+            if let node = treeContainer.nodes(at: touch.location(in: treeContainer)).first(where: { $0 is TreeNode }) as? TreeNode {
                 let detailViewController = ViewNodeDetailViewController()
                 detailViewController.configure(node: node)
                 viewController?.present(detailViewController, animated: true)
