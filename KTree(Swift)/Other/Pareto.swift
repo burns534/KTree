@@ -12,7 +12,7 @@ final class Pareto {
     private var alpha: Double = 1.16
     private var min: Double = 1.0
     
-    static let pareto = Pareto()
+    static let `default` = Pareto()
     
     init(alpha: Double = 1.16, min: Double = 1.0) {
         self.alpha = alpha
@@ -20,19 +20,17 @@ final class Pareto {
     }
     
     func value(_ x: Double) -> Double {
-        if x >= min {
-            return pow(min / x, alpha)
-        }
-        return 1.0
+        return x >= min ? pow(min / x, alpha) : 1.0
+    }
+    
+    func value(_ x: Int) -> Double {
+        let value = 50.0 * Double(UInt(bitPattern: x.hashValue)) / Double(UInt.max)
+        return self.value(value)
     }
 }
 
 final class Probability {
-    static func roll(_ value: Double) -> Bool {
-        let i = Int.random(in: 0..<100)
-        if value * 100 > Double(i) {
-            return true
-        }
-        return false
+    static func hit(_ value: Double) -> Bool {
+        value > Double.random(in: 0...1.0)
     }
 }

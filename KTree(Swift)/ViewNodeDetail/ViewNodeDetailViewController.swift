@@ -10,42 +10,40 @@ import UIKit
 
 class ViewNodeDetailViewController: UIViewController {
     
-    var tagLabel = UILabel()
-    var weightLabel = UILabel()
-    var stampLabel = UILabel()
-    var totalStampsLabel = UILabel()
-    var stampsLabel = UILabel()
-    var parentLabel = UILabel()
-    var leftLabel = UILabel()
-    var rightLabel = UILabel()
-    var subTreeLabel = UILabel()
-    var subRootLabel = UILabel()
-    var locationLabel = UILabel()
-    var leftWidthLabel = UILabel()
-    var rightWidthLabel = UILabel()
-    var stackView: UIStackView!
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
     }
     
     func configure(node: TreeNode) {
+        let tagLabel = UILabel()
         tagLabel.text = "tag: \(node.tag)"
+        let weightLabel = UILabel()
         weightLabel.text = "weight: \(node.weight)"
+        let stampLabel = UILabel()
         stampLabel.text = "stamp: \(node.stamp)"
+        let stampsLabel = UILabel()
         stampsLabel.text = "node stamps: \(node.stamps)"
+        let parentLabel = UILabel()
         parentLabel.text = "parent: \((node.parentNode as? TreeNode) == nil ? "" : String((node.parentNode as! TreeNode).tag))"
+        let leftLabel = UILabel()
         leftLabel.text = "left: \((node.left as? TreeNode) == nil ? "" : String((node.left as! TreeNode).tag))"
+        let rightLabel = UILabel()
         rightLabel.text = "right: \((node.right as? TreeNode) == nil ? "" : String((node.right as! TreeNode).tag))"
-
-        subTreeLabel.text = "subTree: \((node.subTree == .left && node.subTree != nil) ? "left" : "right")"
-        subRootLabel.text = "subRoot: \((node.subRoot as? TreeNode) == nil ? "" : String((node.subRoot as! TreeNode).tag))"
+        let subtreeLabel = UILabel()
+        subtreeLabel.text = "subTree: \((node.subTree == .left && node.subTree != nil) ? "left" : "right")"
+        let subrootLabel = UILabel()
+        subrootLabel.text = "subRoot: \((node.subRoot as? TreeNode) == nil ? "" : String((node.subRoot as! TreeNode).tag))"
+        let locationLabel = UILabel()
         locationLabel.text = String(format: "location: (%.2f, %.2f)", node.position.x, node.position.y)
+        let leftWidthLabel = UILabel()
         leftWidthLabel.text = "leftWidth: \(node.leftWidth)"
+        let rightWidthLabel = UILabel()
         rightWidthLabel.text = "rightWidth: \(node.rightWidth)"
+        let containerPositionLabel = UILabel()
+        containerPositionLabel.text = String(format: "Container position (%.2f, %.2f)", node.parent!.position.x, node.parent!.position.y)
         
-        stackView = UIStackView(arrangedSubviews: [
+        let stackView = UIStackView(arrangedSubviews: [
             tagLabel,
             weightLabel,
             stampLabel,
@@ -53,11 +51,12 @@ class ViewNodeDetailViewController: UIViewController {
             parentLabel,
             leftLabel,
             rightLabel,
-            subTreeLabel,
-            subRootLabel,
+            subtreeLabel,
+            subrootLabel,
             locationLabel,
             leftWidthLabel,
-            rightWidthLabel
+            rightWidthLabel,
+            containerPositionLabel
         ])
         
         stackView.axis = .vertical

@@ -74,10 +74,11 @@ class AnimationController: UIViewController {
             controlViewBottomAnchor,
             controlView.heightAnchor.constraint(equalToConstant: kControlViewHeight)
         ])
-        for _ in 0..<20 {
-            let rand = Int.random(in: 0...300)
-            tree.insert(tag: rand)
-        }
+//        for _ in 0..<20 {
+//            let rand = Int.random(in: 0...300)
+//            tree.insert(tag: rand)
+//        }
+        tree.batchInsert(iterations: 50, range: 500)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -127,8 +128,9 @@ class AnimationController: UIViewController {
         var count = 0
         while count < num {
             let index = Int.random(in: 0..<tree.nodes.count)
-            let p = Pareto.pareto.value(Double(index))
-            if Probability.roll(p) {
+            let p = Pareto.default.value(index)
+            print(p)
+            if Probability.hit(p) {
                 count += 1
                 tree.query(tag: tree.nodes[index].tag)
             }

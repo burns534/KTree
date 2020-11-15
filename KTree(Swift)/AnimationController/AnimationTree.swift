@@ -16,7 +16,7 @@ class AnimationTree: KTree {
     private var totalStamps: Int64 = 0
     
     private var isAnimating: Bool = false
-    var animationSpeed: TimeInterval = 0.3
+    var animationSpeed: TimeInterval = 0.15
 
     var step: CGSize {
         CGSize(width: verticalStep + 2 * TreeNode.nodeRadius, height: horizontalStep + 2 * TreeNode.nodeRadius)
@@ -31,10 +31,26 @@ class AnimationTree: KTree {
     }
     
     private var queue: [() -> Void] = []
+    
+    func batchInsert(iterations: Int, range: Int) {
+        for _ in 0..<iterations {
+            let tag = Int.random(in: 0..<range)
+            let newNode = TreeNode(tag: tag)
+            newNode.zPosition = 0.1
+            if insert(node: newNode, parentNode: root, depth: 0) {
+                scene.treeContainer.addChild(newNode)
+                if let parent = newNode.parentNode as? TreeNode {
+                    newNode.link(to: parent)
+                }
+                nodes.append(newNode)
+                count += 1
+            }
+        }
+        correctTree()
+    }
         
     func insert(tag: Int) {
         let work = { [self] in
-            print("work \(tag)")
             let newNode = TreeNode(tag: tag)
             newNode.zPosition = 0.1
             if insert(node: newNode, parentNode: root, depth: 0) {
@@ -75,12 +91,14 @@ class AnimationTree: KTree {
     private func correctTree() {
         offset = 0
         resizeWidths(start: root)
-        adjustSubtree(start: root, x: scene.treeContainer.position.x, y: scene.treeContainer.position.y, subTree: nil)
+        adjustSubtree(start: root, x: 0, y: 0, subTree: nil)
         dispatchGroup.notify(queue: .main) { [self] in
-            scene.treeContainer.run(SKAction.move(by: CGVector(dx: offset, dy: 0), duration: animationSpeed)) {
-                isAnimating = false
-                next()
-            }
+//            scene.treeContainer.run(SKAction.move(by: CGVector(dx: offset, dy: 0), duration: animationSpeed)) {
+//                isAnimating = false
+//                next()
+//            }
+            isAnimating = false
+            next()
         }
     }
     @discardableResult
@@ -89,6 +107,10 @@ class AnimationTree: KTree {
         node.leftWidth = max(0.5 * step.width, resizeWidths(start: node.left))
         node.rightWidth = max(0.5 * step.width, resizeWidths(start: node.right))
         return node.leftWidth + node.rightWidth
+    }
+    
+    private func adjustTree(completion: @escaping () -> ()) {
+        
     }
 
     private func adjustSubtree(start node: Node?, x: CGFloat, y: CGFloat, subTree: TreeNode.SubTree?) {
@@ -105,15 +127,15 @@ class AnimationTree: KTree {
             }
         }
         
-        let convertedPosition = scene.treeContainer.convert(position, to: scene)
-        if convertedPosition.x + offset < 0 {
-            print(offset, convertedPosition.x)
-            offset = 0 - convertedPosition.x
-//            print("less than, \(node.tag)")
-        } else if convertedPosition.x + offset > UIScreen.main.bounds.width {
-            offset = UIScreen.main.bounds.width - convertedPosition.x
-//            print("greater than \(node.tag)")
-        }
+//        let convertedPosition = scene.treeContainer.convert(position, to: scene)
+//        if convertedPosition.x + offset < 0 {
+//            print(offset, convertedPosition.x)
+//            offset = 0 - convertedPosition.x
+////            print("less than, \(node.tag)")
+//        } else if convertedPosition.x + offset > UIScreen.main.bounds.width {
+//            offset = UIScreen.main.bounds.width - convertedPosition.x
+////            print("greater than \(node.tag)")
+//        }
         
         adjustSubtree(start: node.left, x: position.x, y: position.y - step.height, subTree: .left)
         

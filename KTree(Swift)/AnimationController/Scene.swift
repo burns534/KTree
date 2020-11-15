@@ -12,23 +12,19 @@ import SpriteKit
 class Scene: SKScene {
     
     var viewController: AnimationController?
-    var treeContainer: SKNode = SKNode()
+    var treeContainer: SKShapeNode = SKShapeNode()
     
     private var previousTouchPosition: CGPoint = .zero
     private var panSpeed: CGFloat = 1.0
     
     override func didMove(to view: SKView) {
         addChild(treeContainer)
-        treeContainer.position = CGPoint(x: size.width / 4, y: size.height / 2 - 100)
+        treeContainer.position = CGPoint(x: size.width / 2, y: size.height - 100)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touchCount == 0, touches.count == 1, let touch = touches.first {
+        if event?.allTouches?.count == 1, let touch = touches.first {
             previousTouchPosition = touch.location(in: self)
-        }
-        touchCount += 1
-        if touchCount == 2 {
-            initialTouchDistance = 0
         }
     }
     
@@ -36,16 +32,17 @@ class Scene: SKScene {
     private var zoomSpeed: CGFloat = 1.0
     private var previousScale: CGFloat = 1.0
     private var currentScale: CGFloat = 1.0
-    private var touchCount: Int = 0
-// FIXME: needs work
+    private var isZooming: Bool = false
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touches.count == 1, touchCount == 1, let touch = touches.first {
+        if event?.allTouches?.count == 1, !isZooming, let touch = touches.first {
             let loc = touch.location(in: self)
             let dx = (loc.x - previousTouchPosition.x)
             let dy = (loc.y - previousTouchPosition.y)
             treeContainer.position = CGPoint(x: treeContainer.position.x + dx * panSpeed, y: treeContainer.position.y + dy * panSpeed)
             previousTouchPosition = loc
         } else if touches.count == 2 {
+            isZooming = true
             var location1: CGPoint = .zero
             var location2: CGPoint = .zero
             for touch in touches {
@@ -77,6 +74,9 @@ class Scene: SKScene {
             }
         }
         previousScale = currentScale
-        touchCount = 0
+        initialTouchDistance = 0
+        if event?.allTouches?.count == 1 {
+            isZooming = false
+        }
     }
 }

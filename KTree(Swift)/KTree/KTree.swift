@@ -23,14 +23,10 @@ open class KTree {
     
     var root: Node?
     var count: Int64 = 0
-    
-    var rotateLeftHandler: (Node) -> () = {_ in}
-    var rotateRightHandler: (Node) -> () = {_ in}
-    
+
     func rotateLeft(node: Node) {
-        guard let parent = node.parentNode, node.isEqualTo(node.parentNode?.left)
+        guard let parent = node.parentNode, node.isEqualTo(node.parentNode?.right)
         else { return }
-        rotateLeftHandler(node)
         let grandparentNode = node.parentNode?.parentNode
         node.parentNode?.right = node.left
         node.left = node.parentNode
@@ -47,10 +43,8 @@ open class KTree {
     }
     
     func rotateRight(node: Node) {
-        guard let parent = node.parentNode,
-              node.isEqualTo(node.parentNode?.right)
+        guard let parent = node.parentNode, node.isEqualTo(node.parentNode?.left)
         else { return }
-        rotateRightHandler(node)
         let grandparentNode = node.parentNode?.parentNode
         node.parentNode?.left = node.right
         node.right = node.parentNode
