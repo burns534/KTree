@@ -18,36 +18,44 @@ class AnimationController: UIViewController {
     private let maxNodeValue: Float = 9999
     
     var controlViewBottomAnchor: NSLayoutConstraint!
-    
-    override func loadView() {
-        view = SKView()
-    }
-    
+
     var currentScene: Scene?
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         controlViewBottomAnchor = NSLayoutConstraint(item: controlView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0)
+
+        let sceneView = SKView()
+        view.addSubview(sceneView)
+        sceneView.ignoresSiblingOrder = true
+        let scene = Scene(size: UIScreen.main.bounds.size)
+        scene.viewController = self
+        scene.backgroundColor = .white
+        scene.scaleMode = .aspectFill
+        sceneView.isUserInteractionEnabled = true
+        sceneView.presentScene(scene)
+        sceneView.isMultipleTouchEnabled = true
+        sceneView.showsFPS = true
+        sceneView.showsNodeCount = true
+        sceneView.showsQuadCount = true
+        sceneView.showsDrawCount = true
+        tree = AnimationTree(scene: scene)
+        currentScene = scene
         
-        if let view = view as? SKView {
-            view.ignoresSiblingOrder = true
-            let scene = Scene(size: UIScreen.main.bounds.size)
-            scene.viewController = self
-            scene.backgroundColor = .white
-            scene.scaleMode = .aspectFill
-            view.isUserInteractionEnabled = true
-            view.presentScene(scene)
-            view.isMultipleTouchEnabled = true
-            tree = AnimationTree(scene: scene)
-            currentScene = scene
-        }
+        sceneView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            sceneView.topAnchor.constraint(equalTo: view.topAnchor),
+            sceneView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            sceneView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            sceneView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -kControlViewHeight)
+        ])
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        view.backgroundColor = .white
-        view.isUserInteractionEnabled = true
+        self.view.backgroundColor = .white
+        self.view.isUserInteractionEnabled = true
         
         controlView.infoButton.addTarget(self, action: #selector(infoHandler), for: .touchUpInside)
         controlView.valueSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
@@ -74,10 +82,7 @@ class AnimationController: UIViewController {
             controlViewBottomAnchor,
             controlView.heightAnchor.constraint(equalToConstant: kControlViewHeight)
         ])
-//        for _ in 0..<20 {
-//            let rand = Int.random(in: 0...300)
-//            tree.insert(tag: rand)
-//        }
+
         tree.batchInsert(iterations: 50, range: 500)
     }
 
@@ -129,7 +134,6 @@ class AnimationController: UIViewController {
         while count < num {
             let index = Int.random(in: 0..<tree.nodes.count)
             let p = Pareto.default.value(index)
-            print(p)
             if Probability.hit(p) {
                 count += 1
                 tree.query(tag: tree.nodes[index].tag)

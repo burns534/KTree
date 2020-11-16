@@ -10,27 +10,28 @@ import UIKit
 import SpriteKit
 
 class AnimationTree: KTree {
-    var nodes = [TreeNode]()
+    let scene: Scene
     let verticalStep: CGFloat = 15.0
     let horizontalStep: CGFloat = 15.0
-    private var totalStamps: Int64 = 0
     
-    private var isAnimating: Bool = false
+    var nodes = [TreeNode]()
     var animationSpeed: TimeInterval = 0.15
+    
+    private var totalStamps: Int64 = 0
+    private var isAnimating: Bool = false
+    private var queue: [() -> Void] = []
+    
+    private let dispatchGroup = DispatchGroup()
 
     var step: CGSize {
         CGSize(width: verticalStep + 2 * TreeNode.nodeRadius, height: horizontalStep + 2 * TreeNode.nodeRadius)
     }
     
-    var scene: Scene
-    
     init(scene: Scene) {
         self.scene = scene
 // MARK: Need to change the way the sigmoid works. The derivative isn't the answer to the issue. I would need to take the integral of the derivative which is just the orginal function of weight. Need to handle it on the decay side rather than sigmoid side.
-        print(TreeNode.sigmoid.dx(1000.0))
+//        print(TreeNode.sigmoid.dx(1000.0))
     }
-    
-    private var queue: [() -> Void] = []
     
     func batchInsert(iterations: Int, range: Int) {
         for _ in 0..<iterations {
@@ -78,9 +79,6 @@ class AnimationTree: KTree {
         super.delete(node: node)
         correctTree()
     }
-
-    private var offset: CGFloat = 0
-    private var dispatchGroup = DispatchGroup()
     
     func next() {
         if queue.first != nil {
@@ -89,14 +87,9 @@ class AnimationTree: KTree {
     }
     
     private func correctTree() {
-        offset = 0
         resizeWidths(start: root)
         adjustSubtree(start: root, x: 0, y: 0, subTree: nil)
         dispatchGroup.notify(queue: .main) { [self] in
-//            scene.treeContainer.run(SKAction.move(by: CGVector(dx: offset, dy: 0), duration: animationSpeed)) {
-//                isAnimating = false
-//                next()
-//            }
             isAnimating = false
             next()
         }
@@ -108,15 +101,9 @@ class AnimationTree: KTree {
         node.rightWidth = max(0.5 * step.width, resizeWidths(start: node.right))
         return node.leftWidth + node.rightWidth
     }
-    
-    private func adjustTree(completion: @escaping () -> ()) {
-        
-    }
 
     private func adjustSubtree(start node: Node?, x: CGFloat, y: CGFloat, subTree: TreeNode.SubTree?) {
-        guard let node = node as? TreeNode else {
-            return
-        }
+        guard let node = node as? TreeNode else { return }
         isAnimating = true
         var position = CGPoint(x: x, y: y)
         if let side = subTree {
@@ -126,22 +113,11 @@ class AnimationTree: KTree {
                 position.x += node.leftWidth
             }
         }
-        
-//        let convertedPosition = scene.treeContainer.convert(position, to: scene)
-//        if convertedPosition.x + offset < 0 {
-//            print(offset, convertedPosition.x)
-//            offset = 0 - convertedPosition.x
-////            print("less than, \(node.tag)")
-//        } else if convertedPosition.x + offset > UIScreen.main.bounds.width {
-//            offset = UIScreen.main.bounds.width - convertedPosition.x
-////            print("greater than \(node.tag)")
-//        }
-        
+
         adjustSubtree(start: node.left, x: position.x, y: position.y - step.height, subTree: .left)
         
         dispatchGroup.enter()
 
-// MARK: Mostly works, could be smoother with rotations maybe
         let startPos = node.position
         node.run(SKAction.customAction(withDuration: animationSpeed) { [self] node, elapsed in
             guard let node = node as? TreeNode else { return }
@@ -171,6 +147,7 @@ class AnimationTree: KTree {
     }
 }
 
+// TODO: Move the base functionality here to the superclass
 // This should not be here, should be a method of parent class
 extension AnimationTree {
     func query(tag: Int) {

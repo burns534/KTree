@@ -10,7 +10,7 @@ import UIKit
 
 fileprivate let buttonWidthMultiplier: CGFloat = 0.3
 fileprivate let buttonHeightMultiplier: CGFloat = 0.4
-
+// TODO: Make this use stackviews for better cross-compatibility and fewer constraints. Also redesign it so it looks better and is easier to use for the layperson.
 class ControlView: UIView {
     
     let valueField = PaddedTextField()
