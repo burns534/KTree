@@ -58,13 +58,13 @@ class AnimationController: UIViewController {
         self.view.isUserInteractionEnabled = true
         
         controlView.infoButton.addTarget(self, action: #selector(infoHandler), for: .touchUpInside)
-        controlView.valueSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
-        controlView.valueSlider.maximumValue = Float(maxNodeValue)
-        controlView.valueSlider.value = ceil(maxNodeValue / 2)
+//        controlView.valueSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
+//        controlView.valueSlider.maximumValue = Float(maxNodeValue)
+//        controlView.valueSlider.value = ceil(maxNodeValue / 2)
         sliderChanged()
         iterationSliderChange()
-        controlView.valueField.delegate = self
-        controlView.iterationSlider.addTarget(self, action: #selector(iterationSliderChange), for: .valueChanged)
+//        controlView.valueField.delegate = self
+//        controlView.iterationSlider.addTarget(self, action: #selector(iterationSliderChange), for: .valueChanged)
         
         controlView.undoButton.addTarget(self, action: #selector(undoButtonHandler), for: .touchUpInside)
         controlView.insertButton.addTarget(self, action: #selector(insertHandler), for: .touchUpInside)
@@ -91,20 +91,20 @@ class AnimationController: UIViewController {
     }
 
     @objc func insertHandler(_ sender: UIButton) {
-        guard let text = controlView.valueField.text else { return }
-        if let tag = Int(text) {
-            tree.insert(tag: tag)
-        } else if text.hasPrefix("$") {
-            let index = text.firstIndex { $0 != "$" }!
-            let substring = text[index...]
-            guard let iterations = Int(substring) else { return }
-            for _ in 0..<iterations {
-                tree.insert(tag: Int.random(in: 0..<Int(controlView.valueSlider.value)))
-            }
-        }
-        resignFirstResponder()
-        controlView.valueField.endEditing(true)
-        controlView.valueField.text = ""
+//        guard let text = controlView.valueField.text else { return }
+//        if let tag = Int(text) {
+//            tree.insert(tag: tag)
+//        } else if text.hasPrefix("$") {
+//            let index = text.firstIndex { $0 != "$" }!
+//            let substring = text[index...]
+//            guard let iterations = Int(substring) else { return }
+//            for _ in 0..<iterations {
+//                tree.insert(tag: Int.random(in: 0..<Int(controlView.valueSlider.value)))
+//            }
+//        }
+//        resignFirstResponder()
+//        controlView.valueField.endEditing(true)
+//        controlView.valueField.text = ""
     }
     
 // MARK: Not fully functional
@@ -114,31 +114,31 @@ class AnimationController: UIViewController {
     }
     
     @objc func iterationSliderChange() {
-        controlView.iterationSliderLabel.text = "\(Int(controlView.iterationSlider.value)) Iterations"
+//        controlView.iterationSliderLabel.text = "\(Int(controlView.iterationSlider.value)) Iterations"
     }
     
     @objc func searchHandler(_ sender: UIButton) {
-        guard let text = controlView.valueField.text,
-            let num = Int(text) else { return }
-        let iterations = Int(controlView.iterationSlider.value)
-        if iterations > 0 {
-            for _ in 0..<iterations { tree.query(tag: num) }
-            return
-        }
-        tree.query(tag: num)
+//        guard let text = controlView.valueField.text,
+//            let num = Int(text) else { return }
+//        let iterations = Int(controlView.iterationSlider.value)
+//        if iterations > 0 {
+//            for _ in 0..<iterations { tree.query(tag: num) }
+//            return
+//        }
+//        tree.query(tag: num)
     }
     
     @objc func paretoHandler(_ sender: UIButton) {
-        let num = Int(controlView.iterationSlider.value)
-        var count = 0
-        while count < num {
-            let index = Int.random(in: 0..<tree.nodes.count)
-            let p = Pareto.default.value(index)
-            if Probability.hit(p) {
-                count += 1
-                tree.query(tag: tree.nodes[index].tag)
-            }
-        }
+//        let num = Int(controlView.iterationSlider.value)
+//        var count = 0
+//        while count < num {
+//            let index = Int.random(in: 0..<tree.nodes.count)
+//            let p = Pareto.default.value(index)
+//            if Probability.hit(p) {
+//                count += 1
+//                tree.query(tag: tree.nodes[index].tag)
+//            }
+//        }
     }
     
     @objc func keyboardWillAppear(_ notification: Notification) {
@@ -161,7 +161,7 @@ class AnimationController: UIViewController {
     }
     
     @objc func sliderChanged() {
-        controlView.sliderValueLabel.text = String(Int(controlView.valueSlider.value))
+//        controlView.sliderValueLabel.text = String(Int(controlView.valueSlider.value))
     }
     
     @objc func infoHandler(_ sender: UIButton) {
