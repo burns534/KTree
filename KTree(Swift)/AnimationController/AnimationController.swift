@@ -57,24 +57,15 @@ class AnimationController: UIViewController {
         self.view.backgroundColor = .white
         self.view.isUserInteractionEnabled = true
         
+        controlView.translatesAutoresizingMaskIntoConstraints = false
         controlView.infoButton.addTarget(self, action: #selector(infoHandler), for: .touchUpInside)
-//        controlView.valueSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
-//        controlView.valueSlider.maximumValue = Float(maxNodeValue)
-//        controlView.valueSlider.value = ceil(maxNodeValue / 2)
-        sliderChanged()
-        iterationSliderChange()
-//        controlView.valueField.delegate = self
-//        controlView.iterationSlider.addTarget(self, action: #selector(iterationSliderChange), for: .valueChanged)
-        
+        controlView.picker.dataSource = self
+        controlView.picker.delegate = self
+        controlView.picker.delegate?.pickerView?(controlView.picker, didSelectRow: 0, inComponent: 0)
+        controlView.performButton.addTarget(self, action: #selector(performButtonHandler), for: .touchUpInside)
         controlView.undoButton.addTarget(self, action: #selector(undoButtonHandler), for: .touchUpInside)
-        controlView.insertButton.addTarget(self, action: #selector(insertHandler), for: .touchUpInside)
-        controlView.searchButton.addTarget(self, action: #selector(searchHandler), for: .touchUpInside)
-        controlView.paretoButton.addTarget(self, action: #selector(paretoHandler), for: .touchUpInside)
-        
         
         view.addSubview(controlView)
-        
-        controlView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             controlView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -113,10 +104,21 @@ class AnimationController: UIViewController {
         tree.delete(node: delNode)
     }
     
-    @objc func iterationSliderChange() {
-//        controlView.iterationSliderLabel.text = "\(Int(controlView.iterationSlider.value)) Iterations"
+    @objc func performButtonHandler() {
+        switch controlView.picker.selectedRow(inComponent: 0) {
+        case 0:
+            guard let text = controlView.valueField.text, let value = Int(text) else { return }
+            tree.insert(tag: value)
+        case 2:
+            guard let text = controlView.valueField.text, let value = Int(text) else { return }
+            tree.delete(tag: value)
+        default: exit(EXIT_FAILURE)
+        }
+        
+        resignFirstResponder()
+        controlView.endEditing(true)
     }
-    
+
     @objc func searchHandler(_ sender: UIButton) {
 //        guard let text = controlView.valueField.text,
 //            let num = Int(text) else { return }
@@ -160,10 +162,6 @@ class AnimationController: UIViewController {
         }
     }
     
-    @objc func sliderChanged() {
-//        controlView.sliderValueLabel.text = String(Int(controlView.valueSlider.value))
-    }
-    
     @objc func infoHandler(_ sender: UIButton) {
         //
     }
@@ -176,5 +174,64 @@ extension AnimationController: UITextFieldDelegate {
         return true
     }
 }
+
+fileprivate let options = ["Insert", "Search", "Delete", "Populate", "Pareto"]
+
+extension AnimationController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        options.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        options[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        switch options[row] {
+//        case "Insert":
+////            controlView.iterationField.isHidden = true
+////            controlView.valueField.isHidden = false
+////            controlView.startField.isHidden = true
+////            controlView.endField.isHidden = true
+////            controlView.iterationFieldTopAnchorOne.isActive = true
+////            controlView.iterationFieldTopAnchorTwo.isActive = false
+//        case "Search":
+////            controlView.iterationField.isHidden = false
+////            controlView.valueField.isHidden = false
+////            controlView.startField.isHidden = true
+////            controlView.endField.isHidden = true
+////            controlView.iterationFieldTopAnchorOne.isActive = true
+////            controlView.iterationFieldTopAnchorTwo.isActive = false
+//        case "Delete":
+////            controlView.iterationField.isHidden = true
+////            controlView.valueField.isHidden = false
+////            controlView.startField.isHidden = true
+////            controlView.endField.isHidden = true
+////            controlView.iterationFieldTopAnchorOne.isActive = true
+////            controlView.iterationFieldTopAnchorTwo.isActive = false
+//        case "Populate":
+////            controlView.iterationField.isHidden = false
+////            controlView.valueField.isHidden = true
+////            controlView.startField.isHidden = false
+////            controlView.endField.isHidden = false
+////            controlView.iterationFieldTopAnchorOne.isActive = false
+////            controlView.iterationFieldTopAnchorTwo.isActive = true
+//        case "Pareto":
+////            controlView.iterationField.isHidden = false
+////            controlView.valueField.isHidden = true
+////            controlView.startField.isHidden = false
+////            controlView.endField.isHidden = false
+////            controlView.iterationFieldTopAnchorOne.isActive = false
+////            controlView.iterationFieldTopAnchorTwo.isActive = true
+//        default:
+//            exit(EXIT_FAILURE)
+//        }
+    }
+}
+
 
 

@@ -80,6 +80,12 @@ class AnimationTree: KTree {
         correctTree()
     }
     
+    // does not perform any animation.
+    func delete(tag: Int) {
+        guard let node = search(tag: tag, start: root) else { return } // error, node doesn't exist
+        delete(node: node)
+    }
+    
     func next() {
         if queue.first != nil {
             queue.removeFirst()()
@@ -150,22 +156,34 @@ class AnimationTree: KTree {
 // TODO: Move the base functionality here to the superclass
 // This should not be here, should be a method of parent class
 extension AnimationTree {
-    func query(tag: Int) {
-        _ = query(tag: tag, start: root)
-    }
-    private func query(tag: Int, start node: Node?) -> Bool {
-        guard let node = node as? TreeNode else {
-            return false
-        }
+    
+    private func search(tag: Int, start node: Node?) -> Node? {
+        guard let node = node as? TreeNode else { return nil }
         if tag == node.tag {
             queryCorrect(node: node)
-            return true
+            return node
         } else if tag < node.tag {
-            return query(tag: tag, start: node.left)
+            return search(tag: tag, start: node.left)
         } else {
-            return query(tag: tag, start: node.right)
+            return search(tag: tag, start: node.right)
         }
     }
+    
+
+    
+//    private func query(tag: Int, start node: Node?) -> Bool {
+//        guard let node = node as? TreeNode else {
+//            return false
+//        }
+//        if tag == node.tag {
+//            queryCorrect(node: node)
+//            return true
+//        } else if tag < node.tag {
+//            return query(tag: tag, start: node.left)
+//        } else {
+//            return query(tag: tag, start: node.right)
+//        }
+//    }
 
     private func queryCorrect(node: TreeNode) {
         totalStamps += 1
