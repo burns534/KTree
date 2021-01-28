@@ -157,6 +157,7 @@ class AnimationTree: KTree {
 // This should not be here, should be a method of parent class
 extension AnimationTree {
     
+    @discardableResult
     private func search(tag: Int, start node: Node?) -> Node? {
         guard let node = node as? TreeNode else { return nil }
         if tag == node.tag {
@@ -169,22 +170,11 @@ extension AnimationTree {
         }
     }
     
-
+    func query(tag: Int) -> Bool {
+        guard let node = root as? TreeNode else { return false }
+        return search(tag: tag, start: node) != nil
+    }
     
-//    private func query(tag: Int, start node: Node?) -> Bool {
-//        guard let node = node as? TreeNode else {
-//            return false
-//        }
-//        if tag == node.tag {
-//            queryCorrect(node: node)
-//            return true
-//        } else if tag < node.tag {
-//            return query(tag: tag, start: node.left)
-//        } else {
-//            return query(tag: tag, start: node.right)
-//        }
-//    }
-
     private func queryCorrect(node: TreeNode) {
         totalStamps += 1
         node.stamps += 1

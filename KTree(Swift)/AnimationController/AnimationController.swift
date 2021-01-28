@@ -9,7 +9,9 @@
 import UIKit
 import SpriteKit
 
-let kControlViewHeight: CGFloat = 400
+let kControlViewHeightMultiplier: CGFloat = 0.35
+let kControlViewHeight: CGFloat = kControlViewHeightMultiplier * UIScreen.main.bounds.height
+fileprivate let options = ["Insert", "Search", "Delete", "Populate", "Pareto"]
 
 class AnimationController: UIViewController {
     var tree: AnimationTree!
@@ -80,23 +82,6 @@ class AnimationController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
     }
-
-    @objc func insertHandler(_ sender: UIButton) {
-//        guard let text = controlView.valueField.text else { return }
-//        if let tag = Int(text) {
-//            tree.insert(tag: tag)
-//        } else if text.hasPrefix("$") {
-//            let index = text.firstIndex { $0 != "$" }!
-//            let substring = text[index...]
-//            guard let iterations = Int(substring) else { return }
-//            for _ in 0..<iterations {
-//                tree.insert(tag: Int.random(in: 0..<Int(controlView.valueSlider.value)))
-//            }
-//        }
-//        resignFirstResponder()
-//        controlView.valueField.endEditing(true)
-//        controlView.valueField.text = ""
-    }
     
 // MARK: Not fully functional
     @objc func undoButtonHandler(_ sender: UIButton) {
@@ -109,38 +94,41 @@ class AnimationController: UIViewController {
         case 0:
             guard let text = controlView.valueField.text, let value = Int(text) else { return }
             tree.insert(tag: value)
-        case 2:
+        case 1: // search
+            guard let text = controlView.valueField.text, let value = Int(text),
+                  let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
+            for _ in 0..<iterationValue {
+                tree.query(tag: value) // handle success or failure with user error message
+            }
+        case 2: // delete
             guard let text = controlView.valueField.text, let value = Int(text) else { return }
             tree.delete(tag: value)
-        default: exit(EXIT_FAILURE)
+            print("performing delete")
+        case 3: // populate
+            guard let startText = controlView.startField.text, let start = Int(startText),
+                  let endText = controlView.endField.text, let end = Int(endText),
+                  let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
+            for _ in 0..<iterationValue {
+                tree.insert(tag: Int.random(in: start..<end))
+            }
+        case 4: // pareto
+            guard let startText = controlView.startField.text, let start = Int(startText),
+                  let endText = controlView.endField.text, let end = Int(endText),
+                  let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
+            var count = 0
+            while count < iterationValue {
+                let index = Int.random(in: 0..<Int(tree.count))
+                let p = Pareto.default.value(Int(index))
+                if Probability.hit(p) && tree.query(tag: index) {
+                    count += 1
+                }
+            }
+        default:
+            exit(EXIT_FAILURE)
         }
         
         resignFirstResponder()
         controlView.endEditing(true)
-    }
-
-    @objc func searchHandler(_ sender: UIButton) {
-//        guard let text = controlView.valueField.text,
-//            let num = Int(text) else { return }
-//        let iterations = Int(controlView.iterationSlider.value)
-//        if iterations > 0 {
-//            for _ in 0..<iterations { tree.query(tag: num) }
-//            return
-//        }
-//        tree.query(tag: num)
-    }
-    
-    @objc func paretoHandler(_ sender: UIButton) {
-//        let num = Int(controlView.iterationSlider.value)
-//        var count = 0
-//        while count < num {
-//            let index = Int.random(in: 0..<tree.nodes.count)
-//            let p = Pareto.default.value(index)
-//            if Probability.hit(p) {
-//                count += 1
-//                tree.query(tag: tree.nodes[index].tag)
-//            }
-//        }
     }
     
     @objc func keyboardWillAppear(_ notification: Notification) {
@@ -175,8 +163,6 @@ extension AnimationController: UITextFieldDelegate {
     }
 }
 
-fileprivate let options = ["Insert", "Search", "Delete", "Populate", "Pareto"]
-
 extension AnimationController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         1
@@ -188,48 +174,6 @@ extension AnimationController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         options[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        switch options[row] {
-//        case "Insert":
-////            controlView.iterationField.isHidden = true
-////            controlView.valueField.isHidden = false
-////            controlView.startField.isHidden = true
-////            controlView.endField.isHidden = true
-////            controlView.iterationFieldTopAnchorOne.isActive = true
-////            controlView.iterationFieldTopAnchorTwo.isActive = false
-//        case "Search":
-////            controlView.iterationField.isHidden = false
-////            controlView.valueField.isHidden = false
-////            controlView.startField.isHidden = true
-////            controlView.endField.isHidden = true
-////            controlView.iterationFieldTopAnchorOne.isActive = true
-////            controlView.iterationFieldTopAnchorTwo.isActive = false
-//        case "Delete":
-////            controlView.iterationField.isHidden = true
-////            controlView.valueField.isHidden = false
-////            controlView.startField.isHidden = true
-////            controlView.endField.isHidden = true
-////            controlView.iterationFieldTopAnchorOne.isActive = true
-////            controlView.iterationFieldTopAnchorTwo.isActive = false
-//        case "Populate":
-////            controlView.iterationField.isHidden = false
-////            controlView.valueField.isHidden = true
-////            controlView.startField.isHidden = false
-////            controlView.endField.isHidden = false
-////            controlView.iterationFieldTopAnchorOne.isActive = false
-////            controlView.iterationFieldTopAnchorTwo.isActive = true
-//        case "Pareto":
-////            controlView.iterationField.isHidden = false
-////            controlView.valueField.isHidden = true
-////            controlView.startField.isHidden = false
-////            controlView.endField.isHidden = false
-////            controlView.iterationFieldTopAnchorOne.isActive = false
-////            controlView.iterationFieldTopAnchorTwo.isActive = true
-//        default:
-//            exit(EXIT_FAILURE)
-//        }
     }
 }
 
