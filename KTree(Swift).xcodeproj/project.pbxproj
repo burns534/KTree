@@ -63,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27109CB225C9B00400A5CE5A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				27B4946524E6F6FC006B7219 /* AppDelegate.swift */,
+				27B4946724E6F6FC006B7219 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
 		278E832424F03B8100C14B42 /* ViewNodeDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -94,8 +103,7 @@
 				27B4949624E73161006B7219 /* Other */,
 				27B4948224E6F974006B7219 /* KTree */,
 				27B4947F24E6F79E006B7219 /* AnimationController */,
-				27B4946524E6F6FC006B7219 /* AppDelegate.swift */,
-				27B4946724E6F6FC006B7219 /* SceneDelegate.swift */,
+				27109CB225C9B00400A5CE5A /* App */,
 				27B4946E24E6F6FE006B7219 /* Assets.xcassets */,
 				27B4947324E6F6FE006B7219 /* LaunchScreen.storyboard */,
 				27B4947624E6F6FE006B7219 /* Info.plist */,

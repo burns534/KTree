@@ -10,25 +10,24 @@ import UIKit
 import SpriteKit
 
 class AnimationTree: KTree {
-    let scene: Scene
-    let verticalStep: CGFloat = 15.0
-    let horizontalStep: CGFloat = 15.0
-    
-    var animationSpeed: TimeInterval = 0.15
+    private let scene: Scene
+    private let verticalStep: CGFloat = 15.0
+    private let horizontalStep: CGFloat = 15.0
+    private let dispatchGroup = DispatchGroup()
+    private let nodeRadius: CGFloat
     
     private var isAnimating: Bool = false
-    private var queue: [() -> Void] = []
+    private var animationQueue: [() -> Void] = []
     
-    private let dispatchGroup = DispatchGroup()
 
+    var animationSpeed: TimeInterval = 0.15
     var step: CGSize {
-        CGSize(width: verticalStep + 2 * AnimationNode.nodeRadius, height: horizontalStep + 2 * AnimationNode.nodeRadius)
+        CGSize(width: verticalStep + 2 * nodeRadius, height: horizontalStep + 2 * nodeRadius)
     }
     
-    init(scene: Scene) {
+    init(scene: Scene, nodeRadius: CGFloat = 20) {
         self.scene = scene
-// MARK: Need to change the way the sigmoid works. The derivative isn't the answer to the issue. I would need to take the integral of the derivative which is just the orginal function of weight. Need to handle it on the decay side rather than sigmoid side.
-//        print(TreeNode.sigmoid.dx(1000.0))
+        self.nodeRadius = nodeRadius
     }
     
     func batchInsert(iterations: Int, range: Int) {
@@ -36,7 +35,7 @@ class AnimationTree: KTree {
             let tag = Int.random(in: 0..<range)
             let newNode = AnimationNode(tag: tag)
             newNode.zPosition = 0.1
-            if insert(node: newNode, parentNode: root, depth: 0) {
+            if insert(node: newNode) {
                 scene.treeContainer.addChild(newNode)
                 if let parent = newNode.parentNode as? AnimationNode {
                     newNode.link(to: parent)
@@ -46,51 +45,68 @@ class AnimationTree: KTree {
         }
         correctTree()
     }
-        
+    
     func insert(tag: Int) {
         let work = { [self] in
             let newNode = AnimationNode(tag: tag)
             newNode.zPosition = 0.1
-            if insert(node: newNode, parentNode: root, depth: 0) {
+            if insert(node: newNode) {
                 scene.treeContainer.addChild(newNode)
                 if let parent = newNode.parentNode as? AnimationNode {
                     newNode.link(to: parent)
                 }
-                count += 1
                 correctTree()
             } else {
-                next()
+                popQueue()
             }
         }
         if isAnimating {
-            queue.append(work)
+            animationQueue.append(work)
         } else {
             work()
         }
     }
     
-    func remove_node(tag: Int) {
-        if let node = delete(tag: tag) as? AnimationNode {
-            node.deconfigure()
-            correctTree()
-            node.link(to: node.parentNode as! AnimationNode)
+    func delete(tag: Int) {
+        let work = { [self] in
+            let node = AnimationNode(tag: tag)
+            if let node = pop(node: node) as? AnimationNode {
+                node.deconfigure()
+                node.link(to: node.parentNode)
+                correctTree()
+            } else {
+                popQueue()
+            }
+        }
+        if isAnimating {
+            animationQueue.append(work)
         } else {
-            fatalError("Big problem")
+            work()
         }
     }
     
-    func next() {
-        if queue.first != nil {
-            queue.removeFirst()()
+    @discardableResult
+    func search(tag: Int) -> Bool {
+        let node = AnimationNode(tag: tag)
+        return search(node: node) != nil
+    }
+    
+    private func popQueue() {
+        if animationQueue.first != nil {
+            animationQueue.removeFirst()
         }
+    }
+    
+    private func performQueue() {
+        
     }
     
     private func correctTree() {
         resizeWidths(start: root)
-        adjustSubtree(start: root, x: 0, y: 0, subTree: nil)
+        adjustSubtree(start: root, x: 0, y: 0, subTree: .none)
         dispatchGroup.notify(queue: .main) { [self] in
             isAnimating = false
-            next()
+            popQueue()
         }
     }
     
@@ -102,17 +118,17 @@ class AnimationTree: KTree {
         return node.leftWidth + node.rightWidth
     }
 
-    private func adjustSubtree(start node: Node?, x: CGFloat, y: CGFloat, subTree: AnimationNode.SubTree?) {
+    private func adjustSubtree(start node: Node?, x: CGFloat, y: CGFloat, subTree: SubTree) {
         guard let node = node as? AnimationNode else { return }
         isAnimating = true
         var position = CGPoint(x: x, y: y)
-        if let side = subTree {
-            if side == .left {
-                position.x -= node.rightWidth
-            } else if side == .right {
-                position.x += node.leftWidth
-            }
+        
+        if subTree == .left {
+            position.x -= node.rightWidth
+        } else if subTree == .right {
+            position.x += node.leftWidth
         }
+        
 
         adjustSubtree(start: node.left, x: position.x, y: position.y - step.height, subTree: .left)
         

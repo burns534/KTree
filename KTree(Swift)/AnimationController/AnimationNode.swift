@@ -9,12 +9,12 @@
 import SpriteKit
 
 class Link: NSObject {
-    var link_node: SKShapeNode
+    var linkNode: SKShapeNode
     var first_node: AnimationNode
     var second_node: AnimationNode
     
     init(path: CGPath, first_node: AnimationNode, second_node: AnimationNode) {
-        self.link_node = SKShapeNode(path: path)
+        self.linkNode = SKShapeNode(path: path)
         self.first_node = first_node
         self.second_node = second_node
     }
@@ -26,68 +26,73 @@ class Link: NSObject {
     func deconfigure() {
         first_node.links.removeAll { $0 == self }
         second_node.links.removeAll { $0 == self }
-        link_node.removeFromParent()
+        linkNode.removeFromParent()
     }
 }
 
-class AnimationNode: SKNode, Node {
-    var parentNode: Node?
-    var left: Node?
-    var right: Node?
-    var timestamp: UInt64
-    var weight: Double
-    var subTree: SubTree
+public class AnimationNode: SKNode, Node {
+    public var parentNode: Node?
+    public var left: Node?
+    public var right: Node?
+    public var timestamp: UInt64
+    public var weight: Double
+    public var usage: Double
+    public var subTree: SubTree
     
-    func isEqualTo(_ node: Node?) -> Bool {
+    public func isEqualTo(_ node: Node?) -> Bool {
         guard let node = node as? AnimationNode else {
             return false
         }
         return node.tag == tag
     }
     
-    func isLessThan(_ node: Node?) -> Bool {
+    public func isLessThan(_ node: Node?) -> Bool {
         guard let node = node as? AnimationNode else {
             return false
         }
         return tag < node.tag
     }
     
-    func isGreaterThan(_ node: Node?) -> Bool {
+    public func isGreaterThan(_ node: Node?) -> Bool {
         guard let node = node as? AnimationNode else {
             return false
         }
         return tag > node.tag
     }
-    
-//    static var nodeColor: UIColor = .blue
-    static let nodeRadius: CGFloat = 20
-/// Decays proportional to own weight and time since last feeding (measured in stamps). The decay factor represents factor of weight to be lost at the threshold.
-//    static let thresholdFactor: Double = 2.0
-    
-    var tag: Int
+        
+    public var tag: Int
     var links = [Link]()
-    var stamp: Int64 = 0
     var leftWidth: CGFloat = 0
     var rightWidth: CGFloat = 0
     
-    static let heavyColor = UIColor.red
-    static let lightColor = UIColor.blue
+    static var maxWeight: Double = 1000
+    static var heavyColor: UIColor = .red
+    static var lightColor: UIColor = .blue
+    static var nodeRadius: CGFloat = 20
+    let circle = SKShapeNode(circleOfRadius: nodeRadius)
+    let label = SKLabelNode(fontNamed: "Helvetica")
     
-    
-    
-    init(tag: Int) {
+    public init(tag: Int) {
+        // protocol initializations
+        self.parentNode = nil
+        self.right = nil
+        self.left = nil
+        self.timestamp = 0
+        self.weight = 0
+        self.usage = 0
+        self.subTree = .none
+        // animation initializations
         self.tag = tag
         super.init()
-        configure()
+        createSubviews()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let circle = SKShapeNode(circleOfRadius: AnimationNode.nodeRadius)
-    let label = SKLabelNode(fontNamed: "Helvetica")
-    func configure() {
+    
+    func createSubviews() {
         addChild(circle)
         circle.strokeColor = .black
         label.text = "\(tag)"
@@ -101,9 +106,9 @@ class AnimationNode: SKNode, Node {
         label.text = "\(tag)"
         let ratio = min(CGFloat(10000 * (abs(weight - 1.0)) / AnimationNode.maxWeight), 1.0)
         if weight > 1.0 {
-            circle.fillColor = UIColor.blend(color1: .white, intensity1: 1 - ratio, color2: heavyColor, intensity2: ratio)
+            circle.fillColor = UIColor.blend(color1: .white, intensity1: 1 - ratio, color2: AnimationNode.heavyColor, intensity2: ratio)
         } else {
-            circle.fillColor = UIColor.blend(color1: .white, intensity1: 1 - ratio, color2: lightColor, intensity2: ratio)
+            circle.fillColor = UIColor.blend(color1: .white, intensity1: 1 - ratio, color2: AnimationNode.lightColor, intensity2: ratio)
         }
     }
     
@@ -113,15 +118,16 @@ class AnimationNode: SKNode, Node {
         removeLinks()
     }
     
-    func link(to node: AnimationNode) {
+    func link(to node: Node?) {
+        guard let node = node as? AnimationNode else { return }
         let path = CGMutablePath()
         path.move(to: position)
         path.addLine(to: node.position)
         let link = Link(path: path, first_node: self, second_node: node)
-        link.link_node.strokeColor = .black
+        link.linkNode.strokeColor = .black
         links.append(link)
         node.links.append(link)
-        parent?.addChild(link.link_node)
+        parent?.addChild(link.linkNode)
     }
     
     func removeLinks() {

@@ -31,7 +31,7 @@ class Command {
         switch commandType {
         case .insert:
             guard let value = value else { return }
-            tree.remove_node(tag: value)
+            tree.delete(tag: value)
         case .delete:
             guard let value = value else { return }
             // add insert function for direct insertion from accessQueue
@@ -136,12 +136,12 @@ class AnimationController: UIViewController {
             guard let text = controlView.valueField.text, let value = Int(text),
                   let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
             for _ in 0..<iterationValue {
-                tree.query(tag: value) // handle success or failure with user error message
+                tree.search(tag: value) // handle success or failure with user error message
             }
         case 2: // delete
             guard let text = controlView.valueField.text, let value = Int(text) else { return }
             print("performing delete")
-            tree.remove_node(tag: value)
+            tree.delete(tag: value)
         case 3: // populate
             guard let startText = controlView.startField.text, let start = Int(startText),
                   let endText = controlView.endField.text, let end = Int(endText),
@@ -157,7 +157,7 @@ class AnimationController: UIViewController {
             while count < iterationValue {
                 let index = Int.random(in: 0..<Int(tree.count))
                 let p = Pareto.default.value(Int(index))
-                if Probability.hit(p) && tree.query(tag: index) {
+                if Probability.hit(p) && tree.search(tag: index) {
                     count += 1
                 }
             }

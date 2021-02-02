@@ -20,10 +20,8 @@ class ViewNodeDetailViewController: UIViewController {
         tagLabel.text = "tag: \(node.tag)"
         let weightLabel = UILabel()
         weightLabel.text = "weight: \(node.weight)"
-        let stampLabel = UILabel()
-        stampLabel.text = "stamp: \(node.stamp)"
-        let stampsLabel = UILabel()
-        stampsLabel.text = "node stamps: \(node.stamps)"
+        let timestampLabel = UILabel()
+        timestampLabel.text = "timestamp: \(node.timestamp)"
         let parentLabel = UILabel()
         parentLabel.text = "parent: \((node.parentNode as? AnimationNode) == nil ? "" : String((node.parentNode as! AnimationNode).tag))"
         let leftLabel = UILabel()
@@ -31,7 +29,7 @@ class ViewNodeDetailViewController: UIViewController {
         let rightLabel = UILabel()
         rightLabel.text = "right: \((node.right as? AnimationNode) == nil ? "" : String((node.right as! AnimationNode).tag))"
         let subtreeLabel = UILabel()
-        subtreeLabel.text = "subTree: \((node.subTree == .left && node.subTree != nil) ? "left" : "right")"
+        subtreeLabel.text = "subTree: " + node.subTree.toString()
         let locationLabel = UILabel()
         locationLabel.text = String(format: "location: (%.2f, %.2f)", node.position.x, node.position.y)
         let leftWidthLabel = UILabel()
@@ -44,8 +42,7 @@ class ViewNodeDetailViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [
             tagLabel,
             weightLabel,
-            stampLabel,
-            stampsLabel,
+            timestampLabel,
             parentLabel,
             leftLabel,
             rightLabel,
