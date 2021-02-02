@@ -15,7 +15,7 @@ class ViewNodeDetailViewController: UIViewController {
         view.backgroundColor = .white
     }
     
-    func configure(node: TreeNode) {
+    func configure(node: AnimationNode) {
         let tagLabel = UILabel()
         tagLabel.text = "tag: \(node.tag)"
         let weightLabel = UILabel()
@@ -25,15 +25,13 @@ class ViewNodeDetailViewController: UIViewController {
         let stampsLabel = UILabel()
         stampsLabel.text = "node stamps: \(node.stamps)"
         let parentLabel = UILabel()
-        parentLabel.text = "parent: \((node.parentNode as? TreeNode) == nil ? "" : String((node.parentNode as! TreeNode).tag))"
+        parentLabel.text = "parent: \((node.parentNode as? AnimationNode) == nil ? "" : String((node.parentNode as! AnimationNode).tag))"
         let leftLabel = UILabel()
-        leftLabel.text = "left: \((node.left as? TreeNode) == nil ? "" : String((node.left as! TreeNode).tag))"
+        leftLabel.text = "left: \((node.left as? AnimationNode) == nil ? "" : String((node.left as! AnimationNode).tag))"
         let rightLabel = UILabel()
-        rightLabel.text = "right: \((node.right as? TreeNode) == nil ? "" : String((node.right as! TreeNode).tag))"
+        rightLabel.text = "right: \((node.right as? AnimationNode) == nil ? "" : String((node.right as! AnimationNode).tag))"
         let subtreeLabel = UILabel()
         subtreeLabel.text = "subTree: \((node.subTree == .left && node.subTree != nil) ? "left" : "right")"
-        let subrootLabel = UILabel()
-        subrootLabel.text = "subRoot: \((node.subRoot as? TreeNode) == nil ? "" : String((node.subRoot as! TreeNode).tag))"
         let locationLabel = UILabel()
         locationLabel.text = String(format: "location: (%.2f, %.2f)", node.position.x, node.position.y)
         let leftWidthLabel = UILabel()
@@ -52,7 +50,6 @@ class ViewNodeDetailViewController: UIViewController {
             leftLabel,
             rightLabel,
             subtreeLabel,
-            subrootLabel,
             locationLabel,
             leftWidthLabel,
             rightWidthLabel,

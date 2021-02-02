@@ -9,6 +9,39 @@
 import UIKit
 import SpriteKit
 
+class Command {
+    static var accessQueue = [AnimationNode]()
+    // only 3 fundamental types of commands
+    enum CommandType {
+        case insert, search, delete
+    }
+    let commandType: CommandType
+    let value: Int?
+    
+    init(command: CommandType, value: Int? = nil, node: AnimationNode? = nil) {
+        self.commandType = command
+        self.value = value
+        if let node = node {
+            Command.accessQueue.append(node)
+        }
+    }
+// queries need to be able to un-feed a node.
+// deletions need to save the node in a queue in case undo happens
+    func undo(tree: AnimationTree) {
+        switch commandType {
+        case .insert:
+            guard let value = value else { return }
+            tree.remove_node(tag: value)
+        case .delete:
+            guard let value = value else { return }
+            // add insert function for direct insertion from accessQueue
+        case .search:
+            guard let value = value else { return }
+            // Add un-feed mechanism. Basically save copies of the nodes that were most recently accessed...
+        }
+    }
+}
+
 let kControlViewHeightMultiplier: CGFloat = 0.35
 let kControlViewHeight: CGFloat = kControlViewHeightMultiplier * UIScreen.main.bounds.height
 fileprivate let options = ["Insert", "Search", "Delete", "Populate", "Pareto"]
@@ -16,6 +49,7 @@ fileprivate let options = ["Insert", "Search", "Delete", "Populate", "Pareto"]
 class AnimationController: UIViewController {
     var tree: AnimationTree!
     let controlView = ControlView(frame: .zero)
+    let commandQueue = [Command]()
     
     private let maxNodeValue: Float = 9999
     
@@ -67,6 +101,11 @@ class AnimationController: UIViewController {
         controlView.performButton.addTarget(self, action: #selector(performButtonHandler), for: .touchUpInside)
         controlView.undoButton.addTarget(self, action: #selector(undoButtonHandler), for: .touchUpInside)
         
+        controlView.valueField.delegate = self
+        controlView.iterationField.delegate = self
+        controlView.startField.delegate = self
+        controlView.endField.delegate = self
+        
         view.addSubview(controlView)
         
         NSLayoutConstraint.activate([
@@ -83,10 +122,9 @@ class AnimationController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-// MARK: Not fully functional
+// TODO: Implement functionality with stack
     @objc func undoButtonHandler(_ sender: UIButton) {
-        guard let delNode = tree.nodes.last else { return }
-        tree.delete(node: delNode)
+        
     }
     
     @objc func performButtonHandler() {
@@ -102,8 +140,8 @@ class AnimationController: UIViewController {
             }
         case 2: // delete
             guard let text = controlView.valueField.text, let value = Int(text) else { return }
-            tree.delete(tag: value)
             print("performing delete")
+            tree.remove_node(tag: value)
         case 3: // populate
             guard let startText = controlView.startField.text, let start = Int(startText),
                   let endText = controlView.endField.text, let end = Int(endText),

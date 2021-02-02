@@ -67,7 +67,7 @@ class Scene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 // MARK: Touch up inside
         if let touch = touches.first, previousTouchPosition == touch.location(in: self) {
-            if let node = treeContainer.nodes(at: touch.location(in: treeContainer)).first(where: { $0 is TreeNode }) as? TreeNode {
+            if let node = treeContainer.nodes(at: touch.location(in: treeContainer)).first(where: { $0 is AnimationNode }) as? AnimationNode {
                 let detailViewController = ViewNodeDetailViewController()
                 detailViewController.configure(node: node)
                 viewController?.present(detailViewController, animated: true)

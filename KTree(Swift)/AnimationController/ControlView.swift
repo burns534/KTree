@@ -8,7 +8,7 @@
 
 import UIKit
 
-fileprivate let buttonHeightMultiplier: CGFloat = 0.1
+fileprivate let buttonHeightMultiplier: CGFloat = 0.12
 fileprivate let buttonLineSpacing: CGFloat = 8.0
 fileprivate let buttonWidthMultiplier: CGFloat = 0.38
 

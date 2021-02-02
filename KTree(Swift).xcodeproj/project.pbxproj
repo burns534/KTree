@@ -24,7 +24,7 @@
 		27B4949B24E73161006B7219 /* PaddedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4949824E73161006B7219 /* PaddedTextField.swift */; };
 		27B4949C24E73161006B7219 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4949924E73161006B7219 /* Colors.swift */; };
 		27BB7535255EE7A300AE36EF /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB7534255EE7A300AE36EF /* Scene.swift */; };
-		27BB753B255EF97100AE36EF /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753A255EF97100AE36EF /* TreeNode.swift */; };
+		27BB753B255EF97100AE36EF /* AnimationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753A255EF97100AE36EF /* AnimationNode.swift */; };
 		27BB753E25603B0F00AE36EF /* AnimationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753D25603B0F00AE36EF /* AnimationQueue.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +48,7 @@
 		27B4949824E73161006B7219 /* PaddedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddedTextField.swift; sourceTree = "<group>"; };
 		27B4949924E73161006B7219 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		27BB7534255EE7A300AE36EF /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
-		27BB753A255EF97100AE36EF /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
+		27BB753A255EF97100AE36EF /* AnimationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationNode.swift; sourceTree = "<group>"; };
 		27BB753D25603B0F00AE36EF /* AnimationQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationQueue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,7 +120,7 @@
 				278E832024EB242300C14B42 /* AnimationTree.swift */,
 				27A340E7255DB79200FEBEF8 /* ControlView.swift */,
 				27BB7534255EE7A300AE36EF /* Scene.swift */,
-				27BB753A255EF97100AE36EF /* TreeNode.swift */,
+				27BB753A255EF97100AE36EF /* AnimationNode.swift */,
 			);
 			path = AnimationController;
 			sourceTree = "<group>";
@@ -226,7 +226,7 @@
 				27B4949A24E73161006B7219 /* Extensions.swift in Sources */,
 				278E832324F0387F00C14B42 /* Sigmoid.swift in Sources */,
 				27B4948824E70395006B7219 /* KTree.swift in Sources */,
-				27BB753B255EF97100AE36EF /* TreeNode.swift in Sources */,
+				27BB753B255EF97100AE36EF /* AnimationNode.swift in Sources */,
 				27A340E8255DB79200FEBEF8 /* ControlView.swift in Sources */,
 				278E832124EB242300C14B42 /* AnimationTree.swift in Sources */,
 				27BB7535255EE7A300AE36EF /* Scene.swift in Sources */,
