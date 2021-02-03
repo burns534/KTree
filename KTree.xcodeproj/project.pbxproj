@@ -34,7 +34,7 @@
 		278E832524F03BAB00C14B42 /* ViewNodeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNodeDetailViewController.swift; sourceTree = "<group>"; };
 		278E832924F4387300C14B42 /* Pareto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pareto.swift; sourceTree = "<group>"; };
 		27A340E7255DB79200FEBEF8 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
-		27B4946224E6F6FC006B7219 /* KTree(Swift).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KTree(Swift).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27B4946224E6F6FC006B7219 /* KTree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KTree.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27B4946524E6F6FC006B7219 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27B4946724E6F6FC006B7219 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		27B4946A24E6F6FC006B7219 /* KTree_Swift_.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KTree_Swift_.xcdatamodel; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 		27B4945924E6F6FC006B7219 = {
 			isa = PBXGroup;
 			children = (
-				27B4946424E6F6FC006B7219 /* KTree(Swift) */,
+				27B4946424E6F6FC006B7219 /* KTree */,
 				27B4946324E6F6FC006B7219 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -91,12 +91,12 @@
 		27B4946324E6F6FC006B7219 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				27B4946224E6F6FC006B7219 /* KTree(Swift).app */,
+				27B4946224E6F6FC006B7219 /* KTree.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		27B4946424E6F6FC006B7219 /* KTree(Swift) */ = {
+		27B4946424E6F6FC006B7219 /* KTree */ = {
 			isa = PBXGroup;
 			children = (
 				278E832424F03B8100C14B42 /* ViewNodeDetail */,
@@ -110,7 +110,7 @@
 				27B4946924E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld */,
 				27B4947024E6F6FE006B7219 /* Preview Content */,
 			);
-			path = "KTree(Swift)";
+			path = KTree;
 			sourceTree = "<group>";
 		};
 		27B4947024E6F6FE006B7219 /* Preview Content */ = {
@@ -157,9 +157,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		27B4946124E6F6FC006B7219 /* KTree(Swift) */ = {
+		27B4946124E6F6FC006B7219 /* KTree */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27B4947924E6F6FE006B7219 /* Build configuration list for PBXNativeTarget "KTree(Swift)" */;
+			buildConfigurationList = 27B4947924E6F6FE006B7219 /* Build configuration list for PBXNativeTarget "KTree" */;
 			buildPhases = (
 				27B4945E24E6F6FC006B7219 /* Sources */,
 				27B4945F24E6F6FC006B7219 /* Frameworks */,
@@ -169,9 +169,9 @@
 			);
 			dependencies = (
 			);
-			name = "KTree(Swift)";
+			name = KTree;
 			productName = "KTree(Swift)";
-			productReference = 27B4946224E6F6FC006B7219 /* KTree(Swift).app */;
+			productReference = 27B4946224E6F6FC006B7219 /* KTree.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -189,7 +189,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 27B4945D24E6F6FC006B7219 /* Build configuration list for PBXProject "KTree(Swift)" */;
+			buildConfigurationList = 27B4945D24E6F6FC006B7219 /* Build configuration list for PBXProject "KTree" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -202,7 +202,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				27B4946124E6F6FC006B7219 /* KTree(Swift) */,
+				27B4946124E6F6FC006B7219 /* KTree */,
 			);
 		};
 /* End PBXProject section */
@@ -417,7 +417,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		27B4945D24E6F6FC006B7219 /* Build configuration list for PBXProject "KTree(Swift)" */ = {
+		27B4945D24E6F6FC006B7219 /* Build configuration list for PBXProject "KTree" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27B4947724E6F6FE006B7219 /* Debug */,
@@ -426,7 +426,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27B4947924E6F6FE006B7219 /* Build configuration list for PBXNativeTarget "KTree(Swift)" */ = {
+		27B4947924E6F6FE006B7219 /* Build configuration list for PBXNativeTarget "KTree" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27B4947A24E6F6FE006B7219 /* Debug */,
