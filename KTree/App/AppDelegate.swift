@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-let data = [12, 8, 3, 5, 9, 14, 32, 7, 4, 2]
+let sampleNumbers = [12, 8, 3, 5, 9, 14, 32, 7, 4, 2, 45]
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,14 +17,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        let tree = KTree()
-        for i in data {
-            tree.insert(node: AnimationNode(tag: i))
-        }
-        tree.printTree { node in
-            print((node as! AnimationNode).tag)
-        }
+//        let tree = KTree()
+//        for i in data {
+//            tree.insert(node: AnimationNode(tag: i))
+//        }
+//        tree.printTree()
+//
+//        tree.delete(node: AnimationNode(tag: 12))
+//        tree.printTree()
+//
+//        tree.delete(node: AnimationNode(tag: 32))
+//        tree.printTree()
+        
         return true
     }
 

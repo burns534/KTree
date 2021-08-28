@@ -30,9 +30,9 @@ class AnimationTree: KTree {
         self.nodeRadius = nodeRadius
     }
     
-    func batchInsert(iterations: Int, range: Int) {
+    func batchInsert(iterations: Int, range: Range<Int>) {
         for _ in 0..<iterations {
-            let tag = Int.random(in: 0..<range)
+            let tag = Int.random(in: range)
             let newNode = AnimationNode(tag: tag)
             newNode.zPosition = 0.1
             if insert(node: newNode) {

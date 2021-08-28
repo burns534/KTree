@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2705C4F126D867D00039FB4E /* ctree.c in Sources */ = {isa = PBXBuildFile; fileRef = 2705C4EF26D867D00039FB4E /* ctree.c */; };
+		2705C4F326D868060039FB4E /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2705C4F226D868060039FB4E /* Tree.swift */; };
 		278E832124EB242300C14B42 /* AnimationTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E832024EB242300C14B42 /* AnimationTree.swift */; };
 		278E832324F0387F00C14B42 /* Sigmoid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E832224F0387F00C14B42 /* Sigmoid.swift */; };
 		278E832624F03BAB00C14B42 /* ViewNodeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E832524F03BAB00C14B42 /* ViewNodeDetailViewController.swift */; };
@@ -14,7 +16,7 @@
 		27A340E8255DB79200FEBEF8 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A340E7255DB79200FEBEF8 /* ControlView.swift */; };
 		27B4946624E6F6FC006B7219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946524E6F6FC006B7219 /* AppDelegate.swift */; };
 		27B4946824E6F6FC006B7219 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946724E6F6FC006B7219 /* SceneDelegate.swift */; };
-		27B4946B24E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946924E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld */; };
+		27B4946B24E6F6FC006B7219 /* KTree.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27B4946924E6F6FC006B7219 /* KTree.xcdatamodeld */; };
 		27B4946F24E6F6FE006B7219 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27B4946E24E6F6FE006B7219 /* Assets.xcassets */; };
 		27B4947224E6F6FE006B7219 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27B4947124E6F6FE006B7219 /* Preview Assets.xcassets */; };
 		27B4947524E6F6FE006B7219 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B4947324E6F6FE006B7219 /* LaunchScreen.storyboard */; };
@@ -26,9 +28,15 @@
 		27BB7535255EE7A300AE36EF /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB7534255EE7A300AE36EF /* Scene.swift */; };
 		27BB753B255EF97100AE36EF /* AnimationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753A255EF97100AE36EF /* AnimationNode.swift */; };
 		27BB753E25603B0F00AE36EF /* AnimationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753D25603B0F00AE36EF /* AnimationQueue.swift */; };
+		27D8BB0A26DA8E9E0014E4B5 /* BinaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D8BB0926DA8E9E0014E4B5 /* BinaryEncoder.swift */; };
+		27D8BB0C26DA8EA50014E4B5 /* BinaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D8BB0B26DA8EA50014E4B5 /* BinaryDecoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2705C4EE26D867CF0039FB4E /* KTree-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KTree-Bridging-Header.h"; sourceTree = "<group>"; };
+		2705C4EF26D867D00039FB4E /* ctree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ctree.c; path = "../../../../../C/tree-database/ctree.c"; sourceTree = "<group>"; };
+		2705C4F026D867D00039FB4E /* ctree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ctree.h; path = "../../../../../C/tree-database/ctree.h"; sourceTree = "<group>"; };
+		2705C4F226D868060039FB4E /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		278E832024EB242300C14B42 /* AnimationTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationTree.swift; sourceTree = "<group>"; };
 		278E832224F0387F00C14B42 /* Sigmoid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sigmoid.swift; sourceTree = "<group>"; };
 		278E832524F03BAB00C14B42 /* ViewNodeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNodeDetailViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +58,8 @@
 		27BB7534255EE7A300AE36EF /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		27BB753A255EF97100AE36EF /* AnimationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationNode.swift; sourceTree = "<group>"; };
 		27BB753D25603B0F00AE36EF /* AnimationQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationQueue.swift; sourceTree = "<group>"; };
+		27D8BB0926DA8E9E0014E4B5 /* BinaryEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryEncoder.swift; sourceTree = "<group>"; };
+		27D8BB0B26DA8EA50014E4B5 /* BinaryDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryDecoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +73,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2705C4ED26D867900039FB4E /* C-API */ = {
+			isa = PBXGroup;
+			children = (
+				2705C4EF26D867D00039FB4E /* ctree.c */,
+				2705C4F026D867D00039FB4E /* ctree.h */,
+				2705C4EE26D867CF0039FB4E /* KTree-Bridging-Header.h */,
+			);
+			path = "C-API";
+			sourceTree = "<group>";
+		};
 		27109CB225C9B00400A5CE5A /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -99,15 +119,16 @@
 		27B4946424E6F6FC006B7219 /* KTree */ = {
 			isa = PBXGroup;
 			children = (
+				2705C4ED26D867900039FB4E /* C-API */,
 				278E832424F03B8100C14B42 /* ViewNodeDetail */,
 				27B4949624E73161006B7219 /* Other */,
 				27B4948224E6F974006B7219 /* KTree */,
-				27B4947F24E6F79E006B7219 /* AnimationController */,
+				27B4947F24E6F79E006B7219 /* ViewControllers */,
 				27109CB225C9B00400A5CE5A /* App */,
 				27B4946E24E6F6FE006B7219 /* Assets.xcassets */,
 				27B4947324E6F6FE006B7219 /* LaunchScreen.storyboard */,
 				27B4947624E6F6FE006B7219 /* Info.plist */,
-				27B4946924E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld */,
+				27B4946924E6F6FC006B7219 /* KTree.xcdatamodeld */,
 				27B4947024E6F6FE006B7219 /* Preview Content */,
 			);
 			path = KTree;
@@ -121,7 +142,7 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		27B4947F24E6F79E006B7219 /* AnimationController */ = {
+		27B4947F24E6F79E006B7219 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				27B4948024E6F7EA006B7219 /* AnimationController.swift */,
@@ -130,13 +151,16 @@
 				27BB7534255EE7A300AE36EF /* Scene.swift */,
 				27BB753A255EF97100AE36EF /* AnimationNode.swift */,
 			);
-			path = AnimationController;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		27B4948224E6F974006B7219 /* KTree */ = {
 			isa = PBXGroup;
 			children = (
 				27B4948724E70395006B7219 /* KTree.swift */,
+				2705C4F226D868060039FB4E /* Tree.swift */,
+				27D8BB0926DA8E9E0014E4B5 /* BinaryEncoder.swift */,
+				27D8BB0B26DA8EA50014E4B5 /* BinaryDecoder.swift */,
 			);
 			path = KTree;
 			sourceTree = "<group>";
@@ -186,6 +210,7 @@
 				TargetAttributes = {
 					27B4946124E6F6FC006B7219 = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -225,9 +250,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27D8BB0A26DA8E9E0014E4B5 /* BinaryEncoder.swift in Sources */,
+				27D8BB0C26DA8EA50014E4B5 /* BinaryDecoder.swift in Sources */,
 				27B4946624E6F6FC006B7219 /* AppDelegate.swift in Sources */,
 				27B4949C24E73161006B7219 /* Colors.swift in Sources */,
 				278E832A24F4387300C14B42 /* Pareto.swift in Sources */,
+				2705C4F326D868060039FB4E /* Tree.swift in Sources */,
 				278E832624F03BAB00C14B42 /* ViewNodeDetailViewController.swift in Sources */,
 				27BB753E25603B0F00AE36EF /* AnimationQueue.swift in Sources */,
 				27B4949B24E73161006B7219 /* PaddedTextField.swift in Sources */,
@@ -239,8 +267,9 @@
 				278E832124EB242300C14B42 /* AnimationTree.swift in Sources */,
 				27BB7535255EE7A300AE36EF /* Scene.swift in Sources */,
 				27B4946824E6F6FC006B7219 /* SceneDelegate.swift in Sources */,
-				27B4946B24E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld in Sources */,
+				27B4946B24E6F6FC006B7219 /* KTree.xcdatamodeld in Sources */,
 				27B4948124E6F7EA006B7219 /* AnimationController.swift in Sources */,
+				2705C4F126D867D00039FB4E /* ctree.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +338,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -364,7 +393,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -378,17 +407,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"KTree(Swift)/Preview Content\"";
 				DEVELOPMENT_TEAM = V7TDWR6J46;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "KTree(Swift)/Info.plist";
+				INFOPLIST_FILE = KTree/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "kyle.KTree-Swift-";
+				PRODUCT_BUNDLE_IDENTIFIER = kyle.KTree;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KTree/C-API/KTree-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -398,17 +429,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"KTree(Swift)/Preview Content\"";
 				DEVELOPMENT_TEAM = V7TDWR6J46;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "KTree(Swift)/Info.plist";
+				INFOPLIST_FILE = KTree/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "kyle.KTree-Swift-";
+				PRODUCT_BUNDLE_IDENTIFIER = kyle.KTree;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KTree/C-API/KTree-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -438,13 +470,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		27B4946924E6F6FC006B7219 /* KTree_Swift_.xcdatamodeld */ = {
+		27B4946924E6F6FC006B7219 /* KTree.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				27B4946A24E6F6FC006B7219 /* KTree_Swift_.xcdatamodel */,
 			);
 			currentVersion = 27B4946A24E6F6FC006B7219 /* KTree_Swift_.xcdatamodel */;
-			path = KTree_Swift_.xcdatamodeld;
+			path = KTree.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

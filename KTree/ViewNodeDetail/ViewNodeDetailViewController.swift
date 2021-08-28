@@ -29,7 +29,7 @@ class ViewNodeDetailViewController: UIViewController {
         let rightLabel = UILabel()
         rightLabel.text = "right: \((node.right as? AnimationNode) == nil ? "" : String((node.right as! AnimationNode).tag))"
         let subtreeLabel = UILabel()
-        subtreeLabel.text = "subTree: " + node.subTree.toString()
+        subtreeLabel.text = "subTree: " + node.subtree.toString()
         let locationLabel = UILabel()
         locationLabel.text = String(format: "location: (%.2f, %.2f)", node.position.x, node.position.y)
         let leftWidthLabel = UILabel()

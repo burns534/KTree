@@ -13,6 +13,9 @@ final class Sigmoid {
     private var mid: Double
     private var k: Double
     private var offset: Double
+    
+    public static var `default`: Sigmoid = Sigmoid()
+    
     init(max: Double = 1.0, mid: Double = 0, k: Double = 1.0) {
         self.max = max
         self.mid = mid
@@ -20,11 +23,11 @@ final class Sigmoid {
         offset = max / (1 + exp(-k * (0 - mid)))
     }
     
-    func value(_ x: Double) -> Double {
-        return max / (1 + exp(-k * (x - mid))) - offset
+    func value(_ value: Double) -> Double {
+        return max / (1 + exp(-k * (value - mid))) - offset
     }
     
-    func dx(_ x: Double) -> Double {
-        return max * exp(-k * (x - mid)) * k / pow(1 + exp(-k * (x - mid)), 2)
-    }
+//    func dx(_ x: Double) -> Double {
+//        return max * exp(-k * (x - mid)) * k / pow(1 + exp(-k * (x - mid)), 2)
+//    }
 }

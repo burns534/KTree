@@ -37,7 +37,7 @@ public class AnimationNode: SKNode, Node {
     public var timestamp: UInt64
     public var weight: Double
     public var usage: Double
-    public var subTree: SubTree
+    public var subtree: SubTree
     
     public func isEqualTo(_ node: Node?) -> Bool {
         guard let node = node as? AnimationNode else {
@@ -58,6 +58,14 @@ public class AnimationNode: SKNode, Node {
             return false
         }
         return tag > node.tag
+    }
+    
+    public func display() {
+        print("\(tag)", terminator: "")
+    }
+    
+    public func debug() {
+        
     }
         
     public var tag: Int
@@ -80,7 +88,7 @@ public class AnimationNode: SKNode, Node {
         self.timestamp = 0
         self.weight = 0
         self.usage = 0
-        self.subTree = .none
+        self.subtree = .none
         // animation initializations
         self.tag = tag
         super.init()

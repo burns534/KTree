@@ -8,22 +8,20 @@
 
 import UIKit
 import SpriteKit
-
+/*
 class Command {
-    static var accessQueue = [AnimationNode]()
     // only 3 fundamental types of commands
     enum CommandType {
         case insert, search, delete
     }
     let commandType: CommandType
     let value: Int?
+    let node: AnimationNode?
     
     init(command: CommandType, value: Int? = nil, node: AnimationNode? = nil) {
         self.commandType = command
         self.value = value
-        if let node = node {
-            Command.accessQueue.append(node)
-        }
+        self.node = node
     }
 // queries need to be able to un-feed a node.
 // deletions need to save the node in a queue in case undo happens
@@ -41,6 +39,7 @@ class Command {
         }
     }
 }
+*/
 
 let kControlViewHeightMultiplier: CGFloat = 0.35
 let kControlViewHeight: CGFloat = kControlViewHeightMultiplier * UIScreen.main.bounds.height
@@ -49,7 +48,7 @@ fileprivate let options = ["Insert", "Search", "Delete", "Populate", "Pareto"]
 class AnimationController: UIViewController {
     var tree: AnimationTree!
     let controlView = ControlView(frame: .zero)
-    let commandQueue = [Command]()
+//    let commandQueue = [Command]()
     
     private let maxNodeValue: Float = 9999
     
@@ -115,7 +114,7 @@ class AnimationController: UIViewController {
             controlView.heightAnchor.constraint(equalToConstant: kControlViewHeight)
         ])
 
-        tree.batchInsert(iterations: 50, range: 500)
+        tree.batchInsert(iterations: 50, range: 0..<500)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -150,9 +149,7 @@ class AnimationController: UIViewController {
                 tree.insert(tag: Int.random(in: start..<end))
             }
         case 4: // pareto
-            guard let startText = controlView.startField.text, let start = Int(startText),
-                  let endText = controlView.endField.text, let end = Int(endText),
-                  let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
+            guard let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
             var count = 0
             while count < iterationValue {
                 let index = Int.random(in: 0..<Int(tree.count))

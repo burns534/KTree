@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/kyle/Documents/Programming/Swift/KTree(Swift)/KTree.xcodeproj">
+      location = "self:../KTree">
    </FileRef>
 </Workspace>
