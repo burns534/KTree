@@ -9,10 +9,10 @@
 import Foundation
 
 open class BinaryDecoder {
-    private var data: [UInt8]
+    private var data: Data
     private var cursor = 0
     
-    public init(data: [UInt8]) {
+    public init(data: Data) {
         self.data = data
     }
     
@@ -23,6 +23,7 @@ open class BinaryDecoder {
                cursor + byteCount < data.count {
                 memcpy(&into, start + cursor, byteCount)
                 cursor += byteCount
+            }
         }
     }
     

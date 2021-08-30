@@ -30,35 +30,14 @@ class Link: NSObject {
     }
 }
 
-public class AnimationNode: SKNode, Node {
-    public var parentNode: Node?
-    public var left: Node?
-    public var right: Node?
+public class AnimationNode: SKNode {
+    public var parentNode: AnimationNode?
+    public var left: AnimationNode?
+    public var right: AnimationNode?
     public var timestamp: UInt64
     public var weight: Double
     public var usage: Double
-    public var subtree: SubTree
-    
-    public func isEqualTo(_ node: Node?) -> Bool {
-        guard let node = node as? AnimationNode else {
-            return false
-        }
-        return node.tag == tag
-    }
-    
-    public func isLessThan(_ node: Node?) -> Bool {
-        guard let node = node as? AnimationNode else {
-            return false
-        }
-        return tag < node.tag
-    }
-    
-    public func isGreaterThan(_ node: Node?) -> Bool {
-        guard let node = node as? AnimationNode else {
-            return false
-        }
-        return tag > node.tag
-    }
+    public var subtree: AnimationTree.SubTree
     
     public func display() {
         print("\(tag)", terminator: "")
@@ -126,8 +105,8 @@ public class AnimationNode: SKNode, Node {
         removeLinks()
     }
     
-    func link(to node: Node?) {
-        guard let node = node as? AnimationNode else { return }
+    func link(to node: AnimationNode?) {
+        guard let node = node else { return }
         let path = CGMutablePath()
         path.move(to: position)
         path.addLine(to: node.position)

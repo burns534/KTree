@@ -152,8 +152,8 @@ class AnimationController: UIViewController {
             guard let iterationText = controlView.iterationField.text, let iterationValue = Int(iterationText) else { return }
             var count = 0
             while count < iterationValue {
-                let index = Int.random(in: 0..<Int(tree.count))
-                let p = Pareto.default.value(Int(index))
+                let index = Int.random(in: 0..<Int(tree.nodeCount))
+                let p = Pareto.default.value(index)
                 if Probability.hit(p) && tree.search(tag: index) {
                     count += 1
                 }

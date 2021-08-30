@@ -11,12 +11,20 @@ import CoreData
 
 let sampleNumbers = [12, 8, 3, 5, 9, 14, 32, 7, 4, 2, 45]
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        let tree = CollectionReference("users")
+        do {
+            try tree.addDocument(from: User(id: "@kyleburns", firstName: "Kyle", lastName: "Burns"), forKeyPath: "@kyleburns")
+        } catch {
+            print("couldn't add document \(error.localizedDescription)")
+        }
 //        let tree = KTree()
 //        for i in data {
 //            tree.insert(node: AnimationNode(tag: i))
@@ -29,6 +37,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        tree.delete(node: AnimationNode(tag: 32))
 //        tree.printTree()
         
+        
+//        let file = fopen("hello.txt", "w+")
+//        fputs(strdup("hello"), file)
+//        fclose(file)
+//        let id = UUID().uuidString
+//        let sampleUser = User(id: id, firstName: "Kyle", lastName: "Burns")
+//        let tree = CollectionReference(name: "example")
+//        tree.addDocument(from: sampleUser)
+//        print("heloooo")
+//
+//        let result: User = tree.getDocument(id)
+//
+//        print(result.firstName)
         return true
     }
 

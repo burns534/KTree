@@ -30,6 +30,8 @@
 		27BB753E25603B0F00AE36EF /* AnimationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BB753D25603B0F00AE36EF /* AnimationQueue.swift */; };
 		27D8BB0A26DA8E9E0014E4B5 /* BinaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D8BB0926DA8E9E0014E4B5 /* BinaryEncoder.swift */; };
 		27D8BB0C26DA8EA50014E4B5 /* BinaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D8BB0B26DA8EA50014E4B5 /* BinaryDecoder.swift */; };
+		27D94FFF26DBF1DB00DEE0CD /* Tree.h in Sources */ = {isa = PBXBuildFile; fileRef = 27D94FFE26DBF1DB00DEE0CD /* Tree.h */; };
+		27D9500126DBF1FB00DEE0CD /* Tree.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27D9500026DBF1FB00DEE0CD /* Tree.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +62,8 @@
 		27BB753D25603B0F00AE36EF /* AnimationQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationQueue.swift; sourceTree = "<group>"; };
 		27D8BB0926DA8E9E0014E4B5 /* BinaryEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryEncoder.swift; sourceTree = "<group>"; };
 		27D8BB0B26DA8EA50014E4B5 /* BinaryDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryDecoder.swift; sourceTree = "<group>"; };
+		27D94FFE26DBF1DB00DEE0CD /* Tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
+		27D9500026DBF1FB00DEE0CD /* Tree.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Tree.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 				2705C4EF26D867D00039FB4E /* ctree.c */,
 				2705C4F026D867D00039FB4E /* ctree.h */,
 				2705C4EE26D867CF0039FB4E /* KTree-Bridging-Header.h */,
+				27D94FFE26DBF1DB00DEE0CD /* Tree.h */,
+				27D9500026DBF1FB00DEE0CD /* Tree.mm */,
 			);
 			path = "C-API";
 			sourceTree = "<group>";
@@ -256,8 +262,10 @@
 				27B4949C24E73161006B7219 /* Colors.swift in Sources */,
 				278E832A24F4387300C14B42 /* Pareto.swift in Sources */,
 				2705C4F326D868060039FB4E /* Tree.swift in Sources */,
+				27D94FFF26DBF1DB00DEE0CD /* Tree.h in Sources */,
 				278E832624F03BAB00C14B42 /* ViewNodeDetailViewController.swift in Sources */,
 				27BB753E25603B0F00AE36EF /* AnimationQueue.swift in Sources */,
+				27D9500126DBF1FB00DEE0CD /* Tree.mm in Sources */,
 				27B4949B24E73161006B7219 /* PaddedTextField.swift in Sources */,
 				27B4949A24E73161006B7219 /* Extensions.swift in Sources */,
 				278E832324F0387F00C14B42 /* Sigmoid.swift in Sources */,

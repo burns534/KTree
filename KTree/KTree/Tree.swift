@@ -8,15 +8,15 @@
 
 import Foundation
 
-public protocol BinaryEncodable {
-    func encode(to: BinaryEncoder)
-}
-
-public protocol BinaryDecodable {
-    init(from decoder: BinaryDecoder)
-}
-
-public typealias BinaryCodable = BinaryDecodable & BinaryEncodable
+//public protocol BinaryEncodable {
+//    func encode(to: BinaryEncoder)
+//}
+//
+//public protocol BinaryDecodable {
+//    init(from decoder: BinaryDecoder)
+//}
+//
+//public typealias BinaryCodable = BinaryDecodable & BinaryEncodable
 
 //public struct IndexNode<T: BinaryCodable>: Identifiable {
 //    public var id: Int64
@@ -32,58 +32,63 @@ public typealias BinaryCodable = BinaryDecodable & BinaryEncodable
 
 
     
-public struct User: Identifiable {
-    public var id: String
-    public var firstName: String
-    public var lastName: String
+public struct User: Identifiable, Codable {
+    public var id: String = ""
+    public var firstName: String = ""
+    public var lastName: String = ""
 }
 
-extension User: BinaryCodable {
-    public func encode(to encoder: BinaryEncoder) {
-        encoder.encode(anyType: self)
-    }
-    
-    public init(from decoder: BinaryDecoder) {
-        decoder.read(into: &self)
-    }
-}
+
+
+//extension User: BinaryCodable {
+//    public func encode(to encoder: BinaryEncoder) {
+//        encoder.encode(anyType: self)
+//    }
+//
+//    public init(from decoder: BinaryDecoder) {
+//        decoder.read(into: &self)
+//    }
+//}
+
 
 open class CollectionReference: Query {
-    private var tree: UnsafeMutablePointer<CTree>
-    public init(name: String) {
-        let index_file = name + "_index.bin"
-        let data_file = name + "_data.bin"
-        var index_file_pointer: UnsafeRawPointer
-        withUnsafeBytes(of: index_file.cString(using: .ascii)!) {
-            index_file_pointer = $0.baseAddress!
-        }
-        
-        var data_file_pointer: UnsafeRawPointer
-        withUnsafeBytes(of: data_file.cString(using: .ascii)!) {
-            data_file_pointer = $0.baseAddress!
-        }
-        
-        tree = initialize_CTree(index_file_pointer, data_file_pointer)
+    private var tree: Tree
+    public override init() {
+        tree = Tree()
+        super.init()
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(String(hashValue))
+        tree.setStoragePathWith(url)
     }
     
-    open func addDocument<T: BinaryCodable & Identifiable>(from: T) -> Bool {
-        let data = BinaryEncoder.encode(from)
-//        var unsafePointer: UnsafeRawPointer
-//        withUnsafeBytes(of: data) {
-//            unsafePointer = $0.baseAddress!
-//        }
-        add_document(tree, from.id.hashValue, data, data.count)
-        // maybe??
-        return true
+    public init(_ path: String) {
+        tree = Tree()
+        super.init()
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(path)
+        print(url)
+        tree.setStoragePathWith(url)
     }
     
-    func getDocument<T: BinaryCodable>(_ path: String) -> T {
-        let pointer = UnsafeMutablePointer<UInt8>.allocate(capacity: MemoryLayout<T>.size)
-        get_document(tree, path.hashValue, pointer, MemoryLayout<T>.size)
-        let bufferPointer = UnsafeMutableBufferPointer(start: pointer, count: MemoryLayout<T>.size)
-        let data = Data(buffer: bufferPointer)
-        
+    open func addDocument<T: Codable & Identifiable>(from: T, forKeyPath keyPath: String) throws {
+        let data = try JSONEncoder().encode(from)
+        tree.addDocument(from: data, forKeyPath: keyPath)
     }
+    
+    open func addDocument<T: Codable & Identifiable>(from: T) throws {
+        try addDocument(from: from, forKeyPath: UUID().uuidString)
+    }
+ 
+    open func getDocument<T: Codable & Identifiable>(forKeyPath keyPath: String) -> T? {
+        try? JSONDecoder().decode(T.self, from: tree.getDocumentAtKeyPath(keyPath))
+    }
+    
+//    func getDocument<T: BinaryCodable>(_ path: String) -> T {
+//        let pointer = UnsafeMutablePointer<UInt8>.allocate(capacity: MemoryLayout<T>.size)
+//        get_document(tree, path.hashValue, pointer, MemoryLayout<T>.size)
+//        let bufferPointer = UnsafeMutableBufferPointer(start: pointer, count: MemoryLayout<T>.size)
+//        let data = Data(buffer: bufferPointer)
+//        let result = T(from: BinaryDecoder(data: data))
+//        return result
+//    }
     
     open func addDocument(data: [String: Any]) -> Bool {
         return false
@@ -109,7 +114,7 @@ open class DocumentReference {
         return false
     }
     
-    open func setData<T: BinaryCodable>(from: T) -> Bool {
+    open func setData<T: Codable>(from: T) -> Bool {
         return false
     }
     
@@ -117,12 +122,12 @@ open class DocumentReference {
         return false
     }
     
-    open func data<T: BinaryCodable>() -> T? {
+    open func data<T: Codable>() -> T? {
         return nil
     }
 }
 
-open class Query {
+open class Query: NSObject {
     open func getDocuments() -> [DocumentReference]? {
         return nil
     }
@@ -143,36 +148,3 @@ open class Query {
         return self
     }
 }
-
-
-//open class Tree {
-//    public static let tree: Tree = Tree()
-//
-//    open func collection(_ path: String) -> CollectionReference {
-//        return CollectionReference()
-//    }
-//
-//    open func addDocument<T: Encodable>(from value: T) -> Bool {
-//        if let data = try? JSONEncoder().encode(value) {
-//            var buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count)
-//            data.copyBytes(to: buffer, count: data.count)
-//
-//        }
-//        return false
-//    }
-//
-//    open func getDocuments() -> [DocumentReference] {
-//        return [DocumentReference]()
-//    }
-//
-//    open func setValue(_ value: Any, forKeyPath keyPath: String) -> Bool {
-//        return false
-//    }
-//
-//    open func deleteDocument(forKeyPath: String) -> Bool {
-//        return false
-//    }
-//
-//
-//
-//}
